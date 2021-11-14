@@ -52,31 +52,16 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'dashboard.middleware.ForceDefaultLanguageMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'cms.middleware.utils.ApphookReloadMiddleware',
-    'cms.middleware.user.CurrentUserMiddleware',
-    'cms.middleware.page.CurrentPageMiddleware',
-    'cms.middleware.toolbar.ToolbarMiddleware',
-    'cms.middleware.language.LanguageCookieMiddleware',
-
-    'dashboard.middleware.RestrictUserMiddleware',
-    'dashboard.middleware.CmsHomePageMiddleware',
-    # 'nepal_police_main.middleware.AdminLocaleURLMiddleware',
-    'nepal_police_main.middleware.DashboardLocaleURLMiddleware',
-    'nepal_police_main.middleware.BandwidthMiddleware',
-
 ]
 
-ROOT_URLCONF = 'nepal_police_main.urls'
+ROOT_URLCONF = 'intellijobs.urls'
 
 TEMPLATES = [
     {
@@ -84,26 +69,17 @@ TEMPLATES = [
         'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
-            'builtins': ['user_mgmt.templatetags.user_mgmt_tags'],
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-
-                'cms.context_processors.cms_settings',
-                'django.template.context_processors.i18n',
-                'sekizai.context_processors.sekizai',
-                'dashboard.context_processors.get_all_menus',
-                'dashboard.context_processors.website_logo',
-                'dashboard.context_processors.get_notice_types',
-                # 'dashboard.context_processors.index'
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'nepal_police_main.wsgi.application'
+WSGI_APPLICATION = 'intellijobs.wsgi.application'
 
 
 # Database
@@ -125,15 +101,15 @@ DATABASES = {
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    # },
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
-    # {
-    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    # },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
@@ -174,51 +150,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-SITE_ID = 1
-
-LANGUAGE_CODE = 'ne'
-LANGUAGES = [
-    ('ne', gettext('Nepali')),
-    ('en-us', gettext('English')),
-]
-
-
-CMS_PERMISSION = True
-
-CMS_CACHE_DURATIONS = {
-    'content':3,
-    'menus':180,
-    'permissions':180,
-}
-
-CMS_TEMPLATES = (
-    ('home/homepage.html', 'Index page'),
-    ('home/index.html', 'Landing page'),
-    ('structure/empty_template.html', 'Empty Template'),
-    ('structure/quick-links.html', 'Quick link Template'),
-    ('structure/NPA_school_music.html', 'NPA school Template'),
-    ('structure/departments.html', 'Department Template'),
-    ('structure/Interpol Section.html', 'Interpol Template'),
-    ('structure/human right section.html', 'Human Rights section Template'),
-    ('contactpage/hospital.html', 'Contact Page'),
-    ('safetynsecurity/safetysecuritytips.html', 'safetytips'),
-    ('safetynsecurity/policehelpline.html', 'Police Helpline'),
-    ('safetynsecurity/emergencynumbers.html', 'Emergency Numbers'),
-    # ('home/homepage.html', 'Home Page'),
-    ('general_services/general_services.html', 'general_services'),
-    # ('fullwidth.html', 'Fullwidth'),
-    # ('cms/fullwidth.html', 'Fullwidth'),
-    # ('sidebar_left.html', 'Sidebar Left'),
-    # ('sidebar_right.html', 'Sidebar Right'),
-    ('general_services/general_services.html', 'General Police Service'),
-    ('general_services/general_services_detail.html/', 'General Service Detail'),
-    ('general_services/publicfacilitylist.html', 'Public Facility List'),
-    ('general_services/publicfacilitydetail.html/', 'Public Facility Detail '),
-    ('aboutus/police_chief_template.html', 'Police Chief')
-)
-
 X_FRAME_OPTIONS = 'SAMEORIGIN'
-
 
 EMAIL_BACKEND = config('EMAIL_BACKEND')
 EMAIL_HOST = config('EMAIL_HOST')
@@ -230,92 +162,3 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 CONTACT_EMAIL = config('CONTACT_EMAIL')
 
 CELERY_BROKER_URL = config('CELERY_BROKER_URL')
-
-SUMMERNOTE_CONFIG = {
-    'height': '300px',
-    'width': '100%',
-    'summernote': {
-        'toolbar': [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'filerPicture', 'video', 'filerFile']],
-            ['view', ['fullscreen', 'codeview', 'help']],
-        ],
-    },
-    'css': (
-        '/static/filer/css/admin_filer.css',
-    ),
-    'js': (
-        '/static/admin/js/core.js',
-        '/static/admin/js/vendor/jquery/jquery.js',
-        '/static/admin/js/jquery.init.js',
-        '/static/admin/js/admin/RelatedObjectLookups.js',
-        '/static/admin/js/actions.js',
-        '/static/admin/js/urlify.js',
-        '/static/admin/js/prepopulate.js',
-        '/static/filer/js/addons/popup_handling.js',
-        '/static/filer/js/addons/widget.js',
-        '/static/admin/js/related-widget-wrapper.js',
-        '/static/js/summernote_filer_image_plugin.js',
-        '/static/js/summernote_filer_file_plugin.js',
-    ),
-}
-
-
-"""
-Configurable session timeout in seconds
-to prevent unattended usage of the system
-"""
-SESSION_COOKIE_AGE = int(config('SESSION_TIMEOUT_SECONDS', 300))
-
-# filer related settings
-
-FILER_ENABLE_PERMISSIONS = True
-FILER_ALLOW_REGULAR_USERS_TO_ADD_ROOT_FOLDERS = True
-FILER_STORAGES = {
-    'public': {
-        'main': {
-            'ENGINE': 'filer.storage.PublicFileSystemStorage',
-            'OPTIONS': {
-                'location': MEDIA_ROOT,
-                'base_url': MEDIA_URL,
-            },
-            'UPLOAD_TO': 'filer.utils.generate_filename.randomized',
-            'UPLOAD_TO_PREFIX': 'filer_public',
-        },
-        'thumbnails': {
-            'ENGINE': 'filer.storage.PublicFileSystemStorage',
-            'OPTIONS': {
-                'location': MEDIA_ROOT,
-                'base_url': MEDIA_URL,
-            },
-        },
-    },
-   
-}
-
-
-# emergency contact APIs
-api1 = 'https://apinpima.nepalpolice.gov.np/api/v1/emergency_number_category/get_all'
-api2 = 'https://apinpima.nepalpolice.gov.np/api/v1/emergency_number/get_by_categoryid' # remove query params i.e ?id=id
-
-GET_ALL_CATEGORY_API = config('GET_ALL_CATEGORY_API', api1)
-GET_BY_CATEGORY_ID_API = config('GET_BY_CATEGORY_ID_API', api2)
-
-REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 10,
-    
-    # API throttling
-    'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.AnonRateThrottle',
-    ],
-    'DEFAULT_THROTTLE_RATES': {
-        'anon': '2/second'
-    }
-}
-
-ADMIN_LANGUAGE_CODE = "en-us"
