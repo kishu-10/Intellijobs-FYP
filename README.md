@@ -1,10 +1,10 @@
 # IntelliJobs
 
 - For development environment:
+
     ```
-    - Setup .env for non-docker as following:
-    ```
-    ```
+    - Setup .env for virtual env as following:
+
     DEBUG=1
     ENVIRONMENT=development
     SECRET_KEY=foo
@@ -24,9 +24,7 @@
     EMAIL_PORT=587
     EMAIL_USE_TLS=True
     CONTACT_EMAIL='yourmail@gmail.com'
-    ```
-    ```
-    # celery
+    
     CELERY_BROKER_URL = amqp://localhost
     SESSION_TIMEOUT_SECONDS=300
     ```
