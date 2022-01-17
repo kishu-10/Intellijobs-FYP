@@ -2,6 +2,8 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.template.defaultfilters import slugify
+from intellijobs.abstract import AddressEntity
 
 
 class AuthUser(AbstractUser):
@@ -15,6 +17,7 @@ class AuthUser(AbstractUser):
     ]
     user_uuid = models.UUIDField(
         unique=True, default=uuid.uuid4, editable=False)
+    slug = models.SlugField(max_length=500, unique=True)
     middle_name = models.CharField(max_length=255, blank=True, null=True)
     is_email_verified = models.BooleanField(default=False)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
@@ -24,12 +27,19 @@ class AuthUser(AbstractUser):
     def __str__(self):
         return self.username
 
+    def save(self, *args, **kwargs):
+        if self.slug:
+            self.slug = self.slug
+        else:
+            self.slug = slugify(self.username)
+        return super().save(*args, **kwargs)
+
 
 def dp_path(instance, filename):
     return f'user_{instance.user.id}/{filename}'
 
 
-class UserProfile(models.Model):
+class UserProfile(AddressEntity):
     MALE = 'M'
     FEMALE = 'F'
     OTHER = 'O'
@@ -54,6 +64,7 @@ class UserProfile(models.Model):
         choices=GENDER_CHOICES,
         default=FEMALE,
     )
+    cv = models.FileField(upload_to="user/")
 
     def __str__(self):
         return ' '.join([
@@ -62,7 +73,7 @@ class UserProfile(models.Model):
         ])
 
 
-class OrganizationProfile(models.Model):
+class OrganizationProfile(AddressEntity):
     user = models.OneToOneField(
         to=AuthUser,
         on_delete=models.CASCADE,
