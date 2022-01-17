@@ -11,9 +11,9 @@
     DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
     
     SQL_ENGINE=django.db.backends.postgresql
-    SQL_DATABASE=nepal_police_db
-    SQL_USER=admin
-    SQL_PASSWORD=admin
+    SQL_DATABASE=intellijobsdb
+    SQL_USER=postgres
+    SQL_PASSWORD=postgres
     SQL_PORT=5432
     SQL_HOST=127.0.0.1
 

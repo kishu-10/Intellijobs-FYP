@@ -1,5 +1,7 @@
 from django.db import models
 
+from intellijobs.abstract import DateTimeEntity
+
 # Create your models here.
 
 JOB_LEVEL_CHOICES = (
@@ -15,7 +17,7 @@ EMPLOYEMENT_TYPE_CHOICES = (
     ('Part', 'Part'),
 )
 
-class JobAbstractModel(models.Model):
+class JobAbstractModel(DateTimeEntity):
     title = models.CharField(max_length=150)
     no_of_vacancy = models.PositiveIntegerField()
     offered_salary = models.CharField(max_length=200)
@@ -27,9 +29,6 @@ class JobAbstractModel(models.Model):
     other_specification = models.TextField()
     career_benefits = models.TextField(null=True,blank=True)
     job_address = models.CharField(max_length=225,null=True,blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    updated_by = models.ForeignKey(on_delete=models.CASCADE, related_name='+',null=True,blank=True)
     is_active = models.BooleanField(default=1)
 
     class Meta:
