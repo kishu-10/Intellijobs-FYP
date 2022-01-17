@@ -38,12 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'intellijobs',
     'rest_framework',
     'django_filters',
     'corsheaders',
     'users',
     'posts',
-    'vacancy'
+    'vacancy',
 
 ]
 
@@ -144,12 +145,12 @@ REST_FRAMEWORK = {
 }
 
 # EMAIL configuration
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'imap.gmail.com'
-EMAIL_USE_SSL = True
-EMAIL_PORT = 465
-EMAIL_HOST_USER = 'noreply@infodev.com.np'
-EMAIL_HOST_PASSWORD = 'Nepal999'
+EMAIL_BACKEND = config('EMAIL_BACKEND')
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_USE_SSL=config('EMAIL_USE_SSL')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 #  Auth User configuration
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'users.AuthUser'
