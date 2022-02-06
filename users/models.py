@@ -43,12 +43,6 @@ class UserProfile(AddressEntity):
     last_name = models.CharField(max_length=255)
     middle_name = models.CharField(max_length=255, blank=True, null=True)
     slug = models.SlugField(max_length=500, unique=True)
-    user = models.OneToOneField(
-        to=AuthUser,
-        on_delete=models.CASCADE,
-        related_name='user_profile',
-        null=True,
-    )
     mobile_number = models.CharField(max_length=15, blank=True, null=True)
     display_picture = models.ImageField(
         upload_to=dp_path, null=True, blank=True)
@@ -57,6 +51,12 @@ class UserProfile(AddressEntity):
         max_length=20,
         choices=GENDER_CHOICES,
         default='Male',
+    )
+    user = models.OneToOneField(
+        to=AuthUser,
+        on_delete=models.CASCADE,
+        related_name='user_profile',
+        null=True,
     )
 
     def __str__(self):
@@ -79,17 +79,19 @@ class UserProfile(AddressEntity):
 class OrganizationProfile(AddressEntity):
     """ Organization Profile for the organizations """
 
+    name = models.CharField(max_length=500)
+    slug = models.SlugField(max_length=500, unique=True)
+    mobile_number = models.CharField(max_length=15, blank=True, null=True)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    display_picture = models.ImageField(
+        upload_to=dp_path, null=True, blank=True)
+    description = models.TextField()
     user = models.OneToOneField(
         to=AuthUser,
         on_delete=models.CASCADE,
         related_name='org_profile',
         null=True
     )
-    name = models.CharField(max_length=500)
-    slug = models.SlugField(max_length=500, unique=True)
-    mobile_number = models.CharField(max_length=15, blank=True, null=True)
-    phone_number = models.CharField(max_length=15, blank=True, null=True)
-    description = models.TextField()
 
     def __str__(self):
         return self.name
@@ -99,13 +101,25 @@ class OrganizationProfile(AddressEntity):
         return super().save(*args, **kwargs)
 
 
+def cv_path(instance, filename):
+    return f'user_{instance.candidate.user.id}/{filename}'
+
+
 class CandidateCV(DateTimeEntity):
+    """ CV for the candidates """
+
     cv = models.FileField(upload_to=dp_path)
     candidate = models.ForeignKey(
         UserProfile, on_delete=models.CASCADE, related_name='candidate_cv')
 
 
-class OrganizationPaper(DateTimeEntity):
-    paper = models.FileField(upload_to=dp_path)
+def doc_path(instance, filename):
+    return f'user_{instance.organization.user.id}/{filename}'
+
+
+class OrganizationDocuments(DateTimeEntity):
+    """ Organization Documents for the organization """
+
+    document = models.FileField(upload_to=doc_path)
     ogranization = models.ForeignKey(
         OrganizationProfile, on_delete=models.CASCADE, related_name='organization_paper')
