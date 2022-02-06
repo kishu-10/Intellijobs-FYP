@@ -8,7 +8,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
         try:
-            data["is_codecamp_approver"] = self.user.is_codecamp_approver
+            data["user_type"] = self.user.user_type
         except User.DoesNotExist:
             pass
         return data
