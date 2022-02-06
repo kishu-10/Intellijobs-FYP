@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django_filters',
     'corsheaders',
     'users',
-    'posts',
+    'feeds',
     'vacancy',
 
 ]
@@ -147,7 +147,7 @@ REST_FRAMEWORK = {
 # EMAIL configuration
 EMAIL_BACKEND = config('EMAIL_BACKEND')
 EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_USE_SSL=config('EMAIL_USE_SSL')
+EMAIL_USE_SSL = config('EMAIL_USE_SSL')
 EMAIL_PORT = config('EMAIL_PORT')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
