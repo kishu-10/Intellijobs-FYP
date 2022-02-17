@@ -43,8 +43,9 @@ INSTALLED_APPS = [
     'django_filters',
     'corsheaders',
     'users',
+    'cvbuilder',
     'feeds',
-    'vacancy',
+    'jobs',
 
 ]
 
