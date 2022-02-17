@@ -1,11 +1,12 @@
 from django.db import models
+from users.abstract import DateTimeEntity
 from users.models import UserProfile
 
 
 CV_DATE_INPUT_FORMATS = ['%b %Y']
 
 
-class Resume(models.Model):
+class Resume(DateTimeEntity):
     image = models.ImageField(upload_to='resume_images', null=True, blank=True)
     profession = models.CharField(max_length=255, null=True, blank=True)
     summary = models.CharField(max_length=255, blank=True, null=True)
@@ -13,7 +14,7 @@ class Resume(models.Model):
     github = models.CharField(max_length=255, blank=True, null=True)
     website = models.CharField(max_length=255, blank=True, null=True)
     profile = models.OneToOneField(
-        UserProfile, on_delete=models.CASCADE)
+        UserProfile, on_delete=models.CASCADE, related_name='resume')
 
     def __str__(self):
         return '%s - %s' % (self.name, self.description)

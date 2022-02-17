@@ -31,10 +31,3 @@ class PostViewSet(ModelViewSet, PostDeleteMixin):
 
     serializer_class = PostSerializer
     queryset = Post.objects.all()
-
-
-class GetPostViewSet(ModelViewSet, HomeFeedPostsListMixin):
-    """ View sets to get Feed Posts in Homepage """
-
-    serializer_class = GetPostSerializer
-    queryset = Post.objects.all()

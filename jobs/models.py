@@ -7,9 +7,7 @@ from users.abstract import DateTimeEntity
 JOB_LEVEL_CHOICES = (
     ('Traineeship', 'Traineeship'),
     ('Internship', 'Internship'),
-    ('Junior', 'Junior'),
-    ('Mid', 'Mid'),
-    ('Senior', 'Senior')
+    ('Employee', 'Employee'),
 )
 
 EMPLOYEMENT_TYPE_CHOICES = (
@@ -22,11 +20,11 @@ class JobAbstractModel(DateTimeEntity):
     title = models.CharField(max_length=150)
     no_of_vacancy = models.PositiveIntegerField()
     offered_salary = models.CharField(max_length=200)
-    deadline = models.DateTimeField()
+    deadline = models.DateField(null=True, blank=True)
     education_level = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     skills = models.TextField()
-    other_specification = models.TextField()
+    other_specification = models.TextField(null=True, blank=True)
     career_benefits = models.TextField(null=True, blank=True)
     job_address = models.CharField(max_length=225, null=True, blank=True)
     is_active = models.BooleanField(default=1)
@@ -48,7 +46,7 @@ class Job(JobAbstractModel):
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name='jobs')
     job_level = models.CharField(
-        max_length=50, choices=JOB_LEVEL_CHOICES, default='Mid')
+        max_length=50, choices=JOB_LEVEL_CHOICES, default='Employee')
     employment_type = models.CharField(
         max_length=50, choices=EMPLOYEMENT_TYPE_CHOICES, default='Full')
     experienced_required = models.FloatField()

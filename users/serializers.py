@@ -25,7 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data.get('password'))
         user.save()
 
-        # send email to code camp trainers with credentials
+        # send email to candidate and organization for email verification
         subject = "Email Verification - Intellijobs"
         message = render_to_string('email_verification.html', {
             'user': user,
