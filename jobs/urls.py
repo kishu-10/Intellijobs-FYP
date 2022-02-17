@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.urls import re_path
 from django.urls.conf import path
 
-from vacancy.views import *
+from jobs.views import *
 
 urlpatterns = [
     path('jobs/', JobListView.as_view(), name='job-list'),

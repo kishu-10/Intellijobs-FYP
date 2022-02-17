@@ -1,8 +1,9 @@
 from datetime import date
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator, UniqueValidator
-from vacancy.models import *
+from jobs.models import *
 from django.utils.translation import ugettext_lazy as _
+
 
 class CategorySerializer(serializers.ModelSerializer):
     job_count = serializers.SerializerMethodField()

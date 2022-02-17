@@ -2,10 +2,12 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
-from vacancy.serializers import *
+from jobs.serializers import *
 from rest_framework import status
 
 # Create your views here.
+
+
 class JobListView(ListAPIView):
     serializer_class = JobSerializer
     queryset = Job.objects.filter(
@@ -22,6 +24,7 @@ class JobListView(ListAPIView):
                 is_active=True, deadline__gte=date.today()).order_by('-created_at')
 
         return queryset
+
 
 class CategoriesListView(APIView):
 
@@ -44,7 +47,6 @@ class JobDetailView(APIView):
                             )
         serializer = JobDetailSerializer(job, context={'request': request})
         return Response({'job_detail': serializer.data})
-
 
 
 class CategoryCreateView(APIView):
