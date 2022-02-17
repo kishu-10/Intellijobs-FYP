@@ -1,16 +1,30 @@
-# from rest_framework.response import Response
-# from rest_framework.views import APIView
-# from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
+from django.contrib.auth import get_user_model
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
-# from user.models import AuthUser
-# from user.serializers import AuthUserSerializer
 
+User = get_user_model()
+account_activation_token = PasswordResetTokenGenerator()
 
+class VerifyEmail(APIView):
+    """ To Verify Email of Candidate and Organization """
 
-# # Auth User
-# class AuthUserListView(APIView):
+    def get(self, request, *args, **kwargs):
+        try:
+            uid = urlsafe_base64_decode(kwargs.get('uidb64'))
+            user = User.objects.get(pk=uid)
+        except Exception:
+            user = None
 
-#     def get(self, request):
-#         authuser = AuthUser.objects.all()
-#         serializer = AuthUserSerializer(authuser, many=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
+        if user and PasswordResetTokenGenerator.check_token(self=account_activation_token, user=user,
+                                                            token=kwargs.get('token')):
+            user.is_email_verified = True
+            user.save()
+
+            return Response({"message": "Email Verified Successfully"},status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "Invalid Token. Please enter valid token"},status=status.HTTP_400_BAD_REQUEST)
+            
