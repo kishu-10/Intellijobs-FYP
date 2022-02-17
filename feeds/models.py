@@ -9,7 +9,7 @@ User = get_user_model()
 # Create your models here.
 
 class Post(DateTimeEntity):
-    caption = models.CharField()
+    caption = models.CharField(max_length=500)
     author = models.ForeignKey(
         User, related_name='post', on_delete=models.CASCADE)
 
