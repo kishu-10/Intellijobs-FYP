@@ -1,6 +1,6 @@
 from django.db import models
 
-from intellijobs.abstract import DateTimeEntity
+from users.abstract import DateTimeEntity
 
 # Create your models here.
 

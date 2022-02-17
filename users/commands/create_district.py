@@ -3,7 +3,7 @@ import os
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
-from intellijobs.abstract import District, Province
+from users.abstract import District, Province
 
 
 class Command(BaseCommand):

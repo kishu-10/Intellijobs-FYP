@@ -154,3 +154,6 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 #  Auth User configuration
 AUTH_USER_MODEL = 'users.AuthUser'
+
+# cors configuration
+CORS_ALLOW_ALL_ORIGINS = True

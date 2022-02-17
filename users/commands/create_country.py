@@ -3,7 +3,7 @@ import os
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
-from intellijobs.abstract import Country
+from users.abstract import Country
 
 
 class Command(BaseCommand):
