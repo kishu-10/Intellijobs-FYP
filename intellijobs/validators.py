@@ -2,6 +2,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.core.validators import RegexValidator
 
+
 # function to validate size and extension of file
 def validate_file(fieldfile_obj):
     valid_file_extensions = ['doc', 'docx', 'docm', 'pdf', 'odt']
@@ -19,4 +20,5 @@ def validate_file(fieldfile_obj):
 
 class MobileNumberValidator(RegexValidator):
     regex = '^(\+*977[- ]?)?\d{10}$'
-    message = ('Invalid Mobile Number. Eg.: +977-1234567890/+977 1234567890/977 1234567890/977-1234567890/9874563201')
+    message = (
+        'Invalid Mobile Number. Eg.: +977-1234567890/+977 1234567890/977 1234567890/977-1234567890/9874563201')

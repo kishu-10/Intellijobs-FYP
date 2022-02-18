@@ -3,6 +3,8 @@ from rest_framework.routers import DefaultRouter
 
 from .viewsets import *
 
+app_name = "cvbuilder"
+
 router = DefaultRouter()
 router.register(r"resume/", ResumeViewset, basename="resume")
 router.register(r"experience/", ExperienceViewset, basename="experience")
