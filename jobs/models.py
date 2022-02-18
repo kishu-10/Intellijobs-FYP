@@ -1,6 +1,7 @@
 from django.db import models
 
 from users.abstract import DateTimeEntity
+from users.models import OrganizationProfile
 
 # Create your models here.
 
@@ -28,6 +29,8 @@ class JobAbstractModel(DateTimeEntity):
     career_benefits = models.TextField(null=True, blank=True)
     job_address = models.CharField(max_length=225, null=True, blank=True)
     is_active = models.BooleanField(default=1)
+    organization = models.ForeignKey(
+        OrganizationProfile, on_delete=models.CASCADE, related_name="jobs")
 
     class Meta:
         abstract = True

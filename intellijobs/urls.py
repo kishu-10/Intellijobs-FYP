@@ -24,6 +24,7 @@ from intellijobs.token import CustomTokenObtainPairView
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
+    path('build-cv/', include('cvbuilder.urls')),
 
     # URLs for token authentication
     path('api/token/', CustomTokenObtainPairView.as_view(),
