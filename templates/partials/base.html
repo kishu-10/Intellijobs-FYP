@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<!DOCTYPE js>
+<html lang="en">
+	<head>
+        {% block meta_head %}
+            <meta charset="UTF-8"/>
+		    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <link rel="shortcut icon" href="{% static 'texo-logo.svg' %}" type="image/x-icon">
+        {% endblock meta_head %}
+        {% block block_title %}
+            <title>Dashboard - IntelliJobs</title>
+        {% endblock block_title %}
+
+        {% block main_styles %}
+            <link href="{% static 'css/1.style.css' %} " rel="stylesheet" />
+            <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+        {% endblock main_styles %}
+        
+        {% block extra_styles %}
+
+        {% endblock extra_styles %}
+    </head>
+<body>
+    {% block header %}
+        {% block navbar %}
+            {% include 'partials/_navbar.html' %}
+        {% endblock navbar %}
+    {% endblock header%}
+    {% block sidebar %}
+        {% include 'partials/_sidebar.html' %}
+    {% endblock sidebar %}
+    <main>
+    {% block main_content %}
+            
+    {% endblock %}
+    </main>
+    {% block main_scripts %}
+        <script src="{% static 'assets/home.js' %} "></script>
+        <script src="{% static 'assets/vendors.js' %} "></script>
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.js"></script>
+        {% block extra_scripts %}
+
+        {% endblock extra_scripts %}
+    {% endblock main_scripts %}
+</body>
+</html>

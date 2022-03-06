@@ -1,0 +1,23 @@
+<div class="modal fade modal-deleteDialog" id="deleteModal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title"> </div><span class="font-14" type="button" aria-hidden="true"
+                    data-dismiss="modal" aria-label="Close">
+                    <div class="ic-close"></div>
+                </span>
+            </div>
+            <div class="modal-body"><span class="ic-warning-alt text-danger"></span>
+                {% block delete_title %}
+                <h6 class="title">{{title}}</h6>
+                {% endblock delete_title %}
+                <p class="msg">{{msg}}</p>
+                <div class="modal-button">
+                    <btn class="btn btn-default" data-dismiss="modal">Cancel</btn>
+                    <btn class="btn btn-danger" id="modal-delete-btn">Yes, Delete It</btn>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
