@@ -1,0 +1,34 @@
+{% load static %}
+<aside class="sidebar">
+  <a class="sidebar-brand" href="{% url 'dashboard:index' %}">
+    <img
+      src="{% static 'assets/images/logo.png' %}"
+      alt="Intellijobs"
+    /> </a
+  ><span class="ic-close toggler" type="button"></span>
+  <div class="sidebar-list-wrapper">
+    <ul class="list sidebar-list scrollable">
+      <li class="sidebar-item">
+        <a class="sidebar-link active" href="{% url 'dashboard:index' %}"
+          >Dashboard</a
+        >
+      </li>
+      <li class="sidebar-item">
+        <a
+          class="sidebar-link hasSub"
+          data-toggle="collapse"
+          href="#vacancies"
+          role="button"
+          aria-expanded="false"
+          aria-controls="Products"
+          >Vacancies</a
+        >
+        <ul class="list pl-3 mt-1" id="vacancies">
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="#">Vacancy List</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</aside>

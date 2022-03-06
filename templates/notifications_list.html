@@ -1,0 +1,82 @@
+{% extends 'admin1/partials/base-list.html' %}
+{% load static %}
+
+{% block block_title %}
+    <title>Notifications</title>
+{% endblock %}
+{% block list_page_name %}
+     <h2 class="mb-0">All Notifications</h2>
+
+{% endblock list_page_name %}
+{% block filter_with_search_container %}
+{% endblock %}
+
+{% block table %}
+{% for message in messages %}
+<div class="alert alert-info">
+    <strong>{{message}}</strong>
+    <button type="button" class="close" data-dismiss="alert"></button>
+</div>
+{% endfor %}
+
+{% if has_unread_notif %}
+    <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#markAllRead">Mark all as read</button>
+{% endif %}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>S. No.</th>
+                <th>Notification</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for notification in notifications_list %}
+            <tr {% if not notification.is_read %} class="font-weight-semiBold" {% endif %}>
+                <td class="cell-num">{{ forloop.counter0|add:page_obj.start_index }}</td>
+                <td class="cell-name text-truncate">
+                    <a href="{% url 'dashboard:order-detail' notification.order.pk %}"
+                       data-toggle="tooltip" data-placement="top" title="Click To View Detail">
+                        {{ notification.message }}. &nbsp;<small>{{ notification.date_created }}</small>
+                    </a>
+                </td>
+                <td>
+                     <form class="btn btn-icon-only action-danger" action="{% url 'dashboard:delete_notif' notification.pk %}" method="post">
+                         {% csrf_token %}
+                         <button style="background: none!important; border: none;" type="submit" title="delete"> <i class="ic-delete"></i></button>
+                        </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock table %}
+
+{% block delete_modal %}
+<div class="modal fade modal-deleteDialog" id="markAllRead" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title"> </div><span class="font-14" type="button" aria-hidden="true"
+                    data-dismiss="modal" aria-label="Close">
+                    <div class="ic-close"></div>
+                </span>
+            </div>
+            <div class="modal-body"><span class="ic-warning-alt text-danger"></span>
+                <h6 class="title">Mark All Read </h6>
+                <p class="msg">Are you sure you want to mark all notifications as read ?</p>
+                <form action="{% url 'dashboard:mark_all_read' %}" method="post">
+                    {% csrf_token %}
+                <div class="modal-button">
+                    <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-danger" type="submit">Yes</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

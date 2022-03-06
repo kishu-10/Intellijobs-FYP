@@ -33,6 +33,7 @@ urlpatterns = [
          jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 
     # URLs for apps
+    path('dashboard/', include('dashboard.urls'))
     
 ]
 
