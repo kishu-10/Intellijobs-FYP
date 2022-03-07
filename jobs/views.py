@@ -1,11 +1,62 @@
-from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
+from jobs.forms import CategoryForm
 from jobs.serializers import *
 from rest_framework import status
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView
+from django.contrib import messages
+
 
 # Create your views here.
+
+class DashboardJobCategoryCreateView(CreateView):
+    model = Category
+    form_class = CategoryForm
+    success_url = reverse_lazy("dashboard:category_list")
+    template_name = "job-category/category-create.html"
+
+    def form_valid(self, form):
+        name = form.cleaned_data.get('name')
+        messages.success(
+            self.request, f"{name} created successfully.")
+        super().form_valid(form)
+        return HttpResponseRedirect(self.success_url)
+
+
+class DashboardJobCategoryListView(ListView):
+    model = Category
+    template_name = "job-category/category-list.html"
+    context_object_name = "category_list"
+
+
+class DashboardJobCategoryUpdateView(UpdateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = "job-category/category-update.html"
+    context_object_name = "category"
+    success_url = reverse_lazy("dashboard:category_list")
+
+    def form_valid(self, form):
+        messages.success(self.request, f"{self.object.name} updated successfully.")
+        super().form_valid(form)
+        return HttpResponseRedirect(self.success_url)
+
+
+class DashboardJobCategoryDeleteView(DeleteView):
+    model = Category
+    form_class = CategoryForm
+    context_object_name = "category"
+    success_url = reverse_lazy("dashboard:category_list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request, f"{self.object.name} deleted successfully.")
+        super().form_valid(form)
+        return HttpResponseRedirect(self.success_url)
 
 
 class JobListView(ListAPIView):

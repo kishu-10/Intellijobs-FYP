@@ -17,15 +17,15 @@
         <a
           class="sidebar-link hasSub"
           data-toggle="collapse"
-          href="#vacancies"
+          href="#jobs"
           role="button"
           aria-expanded="false"
           aria-controls="Products"
-          >Vacancies</a
+          >Jobs</a
         >
-        <ul class="list pl-3 mt-1" id="vacancies">
+        <ul class="list pl-3 mt-1" id="jobs">
           <li class="sidebar-item">
-            <a class="sidebar-link" href="#">Vacancy List</a>
+            <a class="sidebar-link" href="{% url 'dashboard:category_list' %}">Job Category List</a>
           </li>
         </ul>
       </li>

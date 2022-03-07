@@ -4999,9 +4999,9 @@ input[type="button"].btn-block {
 }
 .badge {
   display: inline-block;
-  padding: 0.125rem 0.25rem;
-  font-size: 0.75rem;
-  font-weight: 400;
+  padding: 0.3rem 0.5rem;
+  font-size: .85rem;
+  font-weight: 500;
   line-height: 1;
   text-align: center;
   white-space: nowrap;
@@ -10475,6 +10475,7 @@ input::-webkit-calendar-picker-indicator:focus {
   margin-top: 0.25rem;
   color: red;
   font-size: 11.11px;
+  font-weight: 500;
 }
 .error [class^="ic-"],
 .error [class*=" ic-"] {
