@@ -1,0 +1,104 @@
+{% extends 'partials/base.html' %} {% load static %} {% block main_content %}
+<div class="container">
+  <div class="page-header">
+    <h2 class="mb-0">Add Category</h2>
+    <a
+      class="btn btn-sm btn-info btn-icon"
+      href="{% url 'dashboard:category_list' %}"
+    >
+      <span class="ic-arrow-left"></span>Back to Categories
+    </a>
+  </div>
+  <div class="card section-spacer">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-lg-4">
+          <h3 class="section-header">Category Detail</h3>
+          <p class="section-para">Add your category details here</p>
+        </div>
+        <div class="col-lg-8">
+          <form
+            method="post"
+            action="{% url 'dashboard:category_create' %}"
+            enctype="multipart/form-data"
+          >
+            {% csrf_token %}
+            <div class="form-row mt-lg-0 mt-3">
+              <div class="col-md-6 form-group">
+                <label for="">Category Image</label>
+                <div class="form-row d-none">
+                  <img
+                    src=""
+                    width="300dp"
+                    style="margin-left: 5px; margin-bottom: 10px"
+                    id="categoryImagePreview"
+                  />
+                </div>
+                <div class="custom-file">
+                  <input
+                    class="custom-file-input"
+                    type="file"
+                    name="image"
+                    accept="image"
+                    id="imageInput"
+                  />
+                  <label class="custom-file-label">No files selected...</label>
+                </div>
+                <p class="text-gray font-12 mt-2">
+                  File Size must be size &le; 200KB. Image Resolution must be
+                  &le; 1280*720
+                </p>
+                <p class="error">{{form.image.errors|striptags}}</p>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-md-6 form-group">
+                <label for="name">Name</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  name="name"
+                  value="{{form.name.value|default_if_none:''}}"
+                />
+                <p class="error">{{form.name.errors|striptags}}</p>
+              </div>
+            </div>
+            <div class="form-row mt-lg-0 mt-3">
+              <div class="col-xl-6 md-6 form-group">
+                <div class="custom-control custom custom-switch">
+                  <input
+                    name="is_active"
+                    class="custom-control-input"
+                    type="checkbox"
+                    id="customSwitch1"
+                  /><label class="custom-control-label" for="customSwitch1"
+                    >Active
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="section-footer">
+              <a
+                class="btn btn-outline-gray"
+                href="{% url 'dashboard:category_list' %}"
+                >Cancel</a
+              >
+              <button class="btn btn-success" type="submit">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock main_content %} {% block extra_scripts %}
+<script>
+  imageInput.onchange = (evt) => {
+    const [file] = imageInput.files;
+    if (file) {
+      categoryImagePreview.src = URL.createObjectURL(file);
+      $("#categoryImagePreview").parent().removeClass("d-none");
+    }
+  };
+</script>
+{% endblock %}
