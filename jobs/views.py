@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
-from jobs.forms import CategoryForm
+from jobs.forms import CategoryForm, JobForm
 from jobs.serializers import *
 from rest_framework import status
 from django.views.generic import CreateView, ListView, UpdateView, View
@@ -41,7 +41,8 @@ class DashboardJobCategoryUpdateView(UpdateView):
     success_url = reverse_lazy("dashboard:category_list")
 
     def form_valid(self, form):
-        messages.success(self.request, f"{self.object.name} updated successfully.")
+        messages.success(
+            self.request, f"{self.object.name} updated successfully.")
         super().form_valid(form)
         return HttpResponseRedirect(self.success_url)
 
@@ -54,6 +55,60 @@ class DashboardJobCategoryDeleteView(View):
         category.delete()
         messages.success(
             self.request, f"{category.name} deleted successfully.")
+        return HttpResponseRedirect(self.success_url)
+
+# TODO: check CRUD and validation
+
+class DashboardJobCreateView(CreateView):
+    model = Job
+    form_class = JobForm
+    success_url = reverse_lazy("dashboard:jobs_list")
+    template_name = "jobs/jobs-create.html"
+
+    def form_valid(self, form):
+        title = form.cleaned_data.get('title')
+        instance = form.save(commit=False)
+        instance.orgaization = self.request.user.org_profile
+        instance.save()
+        messages.success(
+            self.request, f"{title} created successfully.")
+        super().form_valid(form)
+        return HttpResponseRedirect(self.success_url)
+
+
+class DashboardJobListView(ListView):
+    model = Job
+    template_name = "jobs/jobs-list.html"
+    context_object_name = "jobs_list"
+
+    # def get_queryset(self):
+    #     org_profile = self.request.user.org_profile
+    #     queryset = Job.objects.filter(organization=org_profile)
+    #     return queryset
+
+
+class DashboardJobUpdateView(UpdateView):
+    model = Job
+    form_class = JobForm
+    template_name = "jobs/jobs-update.html"
+    context_object_name = "job"
+    success_url = reverse_lazy("dashboard:jobs_list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request, f"{self.object.title} updated successfully.")
+        super().form_valid(form)
+        return HttpResponseRedirect(self.success_url)
+
+
+class DashboardJobDeleteView(View):
+    success_url = reverse_lazy("dashboard:jobs_list")
+
+    def post(self, request, *args, **kwargs):
+        job = get_object_or_404(Job, pk=self.kwargs.get('pk'))
+        job.delete()
+        messages.success(
+            self.request, f"{job.title} deleted successfully.")
         return HttpResponseRedirect(self.success_url)
 
 

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'intellijobs',
     'rest_framework',
     'django_filters',
+    'tinymce',
     'corsheaders',
     'users',
     'dashboard',
@@ -161,3 +162,10 @@ AUTH_USER_MODEL = 'users.AuthUser'
 
 # cors configuration
 CORS_ALLOW_ALL_ORIGINS = True
+
+
+TINYMCE_DEFAULT_CONFIG = {
+    "height": "350px",
+    "width": "750px",
+    "menubar": False,
+}

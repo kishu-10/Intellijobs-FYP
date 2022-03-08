@@ -3,12 +3,12 @@
 {% endblock %} {% block main_content %}
 <div class="container">
   <div class="page-header">
-    <h2 class="mb-0">Job Categories</h2>
+    <h2 class="mb-0">Jobs</h2>
     <a
       class="btn btn-sm btn-info btn-icon"
-      href="{% url 'dashboard:category_create' %}"
+      href="{% url 'dashboard:jobs_create' %}"
     >
-      <span class="ic-add"></span>Add Job Category
+      <span class="ic-add"></span>Add Job
     </a>
   </div>
   <div class="card">
@@ -28,17 +28,23 @@
               <tr>
                 <th>S. No.</th>
                 <th>Title</th>
+                <th>Category</th>
+                <th>Published Date</th>
+                <th>Deadline</th>
                 <th>Status</th>
                 <th class="text-right">Action</th>
               </tr>
             </thead>
             <tbody>
-              {% for category in category_list %}
+              {% for job in jobs_list %}
               <tr>
                 <td class="cell-num">{{ forloop.counter}}</td>
-                <td>{{ category.name }}</td>
+                <td>{{ job.title }}</td>
+                <td>{{ job.category }}</td>
+                <td>{{ job.date_created|date:'Y-m-d' }}</td>
+                <td>{{ job.deadline }}</td>
                 <td>
-                  {% if category.is_active %}
+                  {% if job.is_active %}
                   <span class="badge badge-success">Active</span>
                   {% else %}
                   <span class="badge badge-muted">Inactive</span>
@@ -48,7 +54,7 @@
                   <div class="input-group input-action">
                     <a
                       class="btn btn-icon-only action-info"
-                      href="{% url 'dashboard:category_update' category.pk %}"
+                      href="{% url 'dashboard:jobs_update' job.pk %}"
                       data-toggle="tooltip"
                       data-placement="top"
                       title="Edit"
@@ -61,7 +67,7 @@
                       data-toggle="modal"
                       data-target="#deleteModal"
                       title="Delete"
-                      data-url="{% url 'dashboard:category_delete' category.pk %}"
+                      data-url="{% url 'dashboard:jobs_delete' job.pk %}"
                     >
                       <i class="ic-delete"></i>
                   </a>
@@ -102,10 +108,10 @@
       </div>
       <div class="modal-body">
         <span class="ic-warning-alt text-danger"></span>
-        <h6 class="title">Delete Job Category</h6>
+        <h6 class="title">Delete Job</h6>
         <p class="msg">Warning! After deleting it, It cannot be undone.</p>
         <div class="modal-button">
-          <form id="deleteJobCategoryForm" method="POST">
+          <form id="deleteJobForm" method="POST">
           {% csrf_token %}
           <btn class="btn btn-default" data-dismiss="modal">Cancel</btn>
           <btn class="btn btn-danger" id="delete-btn">Yes, Delete It</btn>
@@ -122,11 +128,11 @@
     _url = button.data('url')
     console.log(_url)
     event.preventDefault();
-    $("#deleteJobCategoryForm").attr("action", _url)
-    console.log($("deleteJobCategoryForm").attr('action'))
+    $("#deleteJobForm").attr("action", _url)
+    console.log($("deleteJobForm").attr('action'))
     $("#delete-btn").on("click", function (click) {
       click.preventDefault();
-      $("#deleteJobCategoryForm").submit()
+      $("#deleteJobForm").submit()
     });
   });
 </script>
