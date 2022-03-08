@@ -2,7 +2,6 @@
 <title>Category List</title>
 {% endblock %} {% block main_content %}
 <div class="container">
-  {% csrf_token %}
   <div class="page-header">
     <h2 class="mb-0">Job Categories</h2>
     <a
@@ -56,16 +55,16 @@
                     >
                       <i class="ic-edit"></i>
                     </a>
-                    <button
+                    <a
                       class="btn btn-icon-only action-danger"
                       data-placement="top"
                       data-toggle="modal"
                       data-target="#deleteModal"
                       title="Delete"
-                      href="{% url 'dashboard:category_delete' category.pk %}"
+                      data-url="{% url 'dashboard:category_delete' category.pk %}"
                     >
                       <i class="ic-delete"></i>
-                    </a>
+                  </a>
                   </div>
                 </td>
               </tr>
@@ -106,8 +105,11 @@
         <h6 class="title">Delete Job Categort</h6>
         <p class="msg">Warning! After deleting it, It cannot be undone.</p>
         <div class="modal-button">
+          <form id="deleteJobCategoryForm" method="POST">
+          {% csrf_token %}
           <btn class="btn btn-default" data-dismiss="modal">Cancel</btn>
           <btn class="btn btn-danger" id="delete-btn">Yes, Delete It</btn>
+          </form>
         </div>
       </div>
     </div>
@@ -116,25 +118,15 @@
 {% endblock modal %} {% block extra_scripts %}
 <script>
   $("#deleteModal").on("shown.bs.modal", function (event) {
+    var button =  $(event.relatedTarget)
+    _url = button.data('url')
+    console.log(_url)
     event.preventDefault();
+    $("#deleteJobCategoryForm").attr("action", _url)
+    console.log($("deleteJobCategoryForm").attr('action'))
     $("#delete-btn").on("click", function (click) {
       click.preventDefault();
-      _url = event.relatedTarget.attributes.href.textContent;
-      $.ajax({
-        url: _url,
-        type: "POST",
-        data: {
-          csrfmiddlewaretoken: document.getElementsByName(
-            "csrfmiddlewaretoken"
-          )[0].value,
-        },
-        success: function (response) {
-          window.location.href = window.location.href
-        },
-        error: function (errorResponse) {
-            console.log("Error data is", errorResponse);
-        }
-      });
+      $("#deleteJobCategoryForm").submit()
     });
   });
 </script>
