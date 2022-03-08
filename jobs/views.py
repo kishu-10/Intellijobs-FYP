@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -7,7 +7,7 @@ from rest_framework.generics import ListAPIView
 from jobs.forms import CategoryForm
 from jobs.serializers import *
 from rest_framework import status
-from django.views.generic import CreateView, ListView, UpdateView, DeleteView
+from django.views.generic import CreateView, ListView, UpdateView, View
 from django.contrib import messages
 
 
@@ -46,16 +46,14 @@ class DashboardJobCategoryUpdateView(UpdateView):
         return HttpResponseRedirect(self.success_url)
 
 
-class DashboardJobCategoryDeleteView(DeleteView):
-    model = Category
-    form_class = CategoryForm
-    context_object_name = "category"
+class DashboardJobCategoryDeleteView(View):
     success_url = reverse_lazy("dashboard:category_list")
 
-    def form_valid(self, form):
+    def post(self, request, *args, **kwargs):
+        category = get_object_or_404(Category, pk=self.kwargs.get('pk'))
+        category.delete()
         messages.success(
-            self.request, f"{self.object.name} deleted successfully.")
-        super().form_valid(form)
+            self.request, f"{category.name} deleted successfully.")
         return HttpResponseRedirect(self.success_url)
 
 
