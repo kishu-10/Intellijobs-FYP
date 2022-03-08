@@ -13,16 +13,25 @@ class Province(models.Model):
     name = models.CharField(max_length=255)
     province_code = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.name
+
 
 class District(models.Model):
     name = models.CharField(max_length=255)
     province = models.ForeignKey(Province, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return self.name
 
 
 class Country(models.Model):
     name_iso_3166_a2 = models.CharField(max_length=10)
     printable_name = models.CharField(max_length=255)
     name = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.printable_name
 
 
 class AddressEntity(models.Model):

@@ -17,6 +17,6 @@ class Command(BaseCommand):
                 print(row[0])
                 country, created = Country.objects.get_or_create(
                     name_iso_3166_a2=row[0],
-                    printable_name=row[3],
-                    name=row[4],
+                    printable_name=row[1],
+                    name=row[2],
                 )
