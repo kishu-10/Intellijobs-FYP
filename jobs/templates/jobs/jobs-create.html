@@ -1,0 +1,168 @@
+{% extends 'partials/base.html' %} {% load static %} {% block main_content %}
+<div class="container">
+  <div class="page-header">
+    <h2 class="mb-0">Add Job</h2>
+    <a
+      class="btn btn-sm btn-info btn-icon"
+      href="{% url 'dashboard:jobs_list' %}"
+    >
+      <span class="ic-arrow-left"></span>Back to Jobs
+    </a>
+  </div>
+  <div class="card section-spacer">
+    <div class="card-body">
+      {{ form.media }}
+      <div class="row">
+        <div class="col-lg-4">
+          <h3 class="section-header">Job Detail</h3>
+          <p class="section-para">Add your job details here</p>
+        </div>
+        <div class="col-lg-8">
+          <form
+            method="post"
+            action="{% url 'dashboard:jobs_create' %}"
+            enctype="multipart/form-data"
+          >
+            {% csrf_token %}
+            <div class="form-row mt-lg-0 mt-3">
+              <div class="col-md-9 form-group">
+                <label for="title">Title</label>
+                {{form.title}}
+                <p class="error">{{form.title.errors|striptags}}</p>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-md-3 form-group">
+                <label for="no_of_vacancy">No. of Vacancy</label>
+                <input
+                  class="form-control"
+                  type="number"
+                  name="no_of_vacancy"
+                  value="{{form.no_of_vacancy.value|default_if_none:''}}"
+                />
+                <p class="error">{{form.no_of_vacancy.errors|striptags}}</p>
+              </div>
+              <div class="col-md-3 form-group">
+                <label for="offered_salary">Offered Salary</label>
+                {{form.offered_salary}}
+                <p class="error">{{form.offered_salary.errors|striptags}}</p>
+              </div>
+              <div class="col-md-3 form-group">
+                <label for="deadline">Deadline</label>
+                <input
+                  class="form-control"
+                  type="date"
+                  name="deadline"
+                  value="{{form.deadline.value|default_if_none:''}}"
+                />
+                <p class="error">{{form.deadline.errors|striptags}}</p>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-md-3 form-group">
+                <label for="category">Category</label>
+                {{form.category}}
+                <p class="error">{{form.category.errors|striptags}}</p>
+              </div>
+              <div class="col-md-3 form-group">
+                <label for="job_level">Job Level</label>
+               {{form.job_level}}
+                <p class="error">{{form.job_level.errors|striptags}}</p>
+              </div>
+              <div class="col-md-3 form-group">
+                <label for="employment_type">Employment Type</label>
+                {{form.employment_type}}
+                <p class="error">{{form.employment_type.errors|striptags}}</p>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-md-3 form-group">
+                <label for="education_level">Education Level</label>
+                {{form.education_level}}
+                <p class="error">{{form.education_level.errors|striptags}}</p>
+              </div>
+              <div class="col-md-3 form-group">
+                <label for="experienced_required">Experience Required</label>
+                {{form.experienced_required}}
+                <p class="error">{{form.experienced_required.errors|striptags}}</p>
+              </div>
+              <div class="col-md-3 form-group">
+                <label for="job_address">Address</label>
+                {{form.job_address}}
+                <p class="error">{{form.job_address.errors|striptags}}</p>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-md-10 form-group">
+                <label for="description">Description</label>
+                {{form.description}}
+                <p class="error">{{form.description.errors|striptags}}</p>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-md-10 form-group">
+                <label for="skills">Skills</label>
+                {{form.skills}}
+                <p class="error">{{form.skills.errors|striptags}}</p>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-md-10 form-group">
+                <label for="other_specification">Other Specifications</label>
+                {{form.other_specification}}
+                <p class="error">
+                  {{form.other_specification.errors|striptags}}
+                </p>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-md-10 form-group">
+                <label for="career_benefits">Career Benefits</label>
+                {{form.career_benefits}}
+                <p class="error">{{form.career_benefits.errors|striptags}}</p>
+              </div>
+            </div>
+            <div class="form-row mt-lg-0 mt-3">
+              <div class="col-xl-6 md-6 form-group">
+                <div class="custom-control custom custom-switch">
+                  <input
+                    name="is_active"
+                    class="custom-control-input"
+                    type="checkbox"
+                    id="customSwitch1"
+                  /><label class="custom-control-label" for="customSwitch1"
+                    >Active
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="section-footer">
+              <a
+                class="btn btn-outline-gray"
+                href="{% url 'dashboard:category_list' %}"
+                >Cancel</a
+              >
+              <button class="btn btn-success" type="submit">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock main_content %} {% block extra_scripts %}
+<script>
+  $(document).ready(function () {
+    var dtToday = new Date();
+    var month = dtToday.getMonth() + 1;
+    var day = dtToday.getDate();
+    var year = dtToday.getFullYear();
+
+    if (month < 10) month = "0" + month.toString();
+    if (day < 10) day = "0" + day.toString();
+
+    var maxDate = year + "-" + month + "-" + day;
+    $("input[name=deadline]").attr("min", maxDate);
+  });
+</script>
+{% endblock %}
