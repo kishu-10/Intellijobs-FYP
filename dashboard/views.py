@@ -26,10 +26,18 @@ class DashboardVerifyOrganization(View):
         context = dict()
         organization = get_object_or_404(
             OrganizationProfile, pk=self.kwargs.get('pk'))
-        org_docs = OrganizationDocuments.objects.filter(
+        org_files = OrganizationDocuments.objects.filter(
             ogranization=organization)
+        org_images = []
+        org_docs = []
+        for i in org_files:
+            if i.document.name.endswith(('.png', '.jpg', '.jpeg', '.bmp', '.svg', '.webp')):
+                org_images.append(i)
+            else: 
+                org_docs.append(i)
         context['organization'] = organization
         context['org_docs'] = org_docs
+        context['org_images'] = org_images
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):

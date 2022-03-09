@@ -11664,6 +11664,15 @@ body.toggled main {
   cursor: pointer;
 }
 
+.card--gray{
+  background: #ecf1f5 !important;
+  background-color: #ecf1f5 !important;
+  color: var(--primary) !important;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 0rem 1.5rem 1rem 0rem;
+}
+
 .accordion-drop-icon {
   float: right;
   padding-top: 3px;
@@ -11729,3 +11738,18 @@ body.toggled main {
   text-align: justify;
 }
 
+.align-vertical {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+}
+
+.align-vertical h4{
+    font-size: 1.44rem;
+    padding-top: 5px;
+}
+
+.org-doc-images{
+  padding-top: 10px;
+  padding-right: 8rem;
+}

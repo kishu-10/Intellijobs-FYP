@@ -17,13 +17,13 @@
             {% if organization.display_picture %}
             <img
               src="{{organization.display_picture.url}}"
-              width="300dp"
+              width="250dp"
               style="margin-left: 5px; margin-bottom: 10px"
             />
             {% else %}
             <img
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8oSUHS5yxksmIz2xmT1AD-TQpWx0OuRFMB6AM_mM4KNSOJ-M-k1QrGQsMrXPf1p8V3SA&usqp=CAU"
-              width="300dp"
+              width="250dp"
               style="margin-left: 5px; margin-bottom: 10px"
             />
             {% endif %}
@@ -154,34 +154,25 @@
                     aria-labelledby="faqTwo"
                     data-parent="#OrgDocs"
                   >
-                    <div class="accordion-card-body font-14">
-                      <div class="organization-details">
-                        <div class="item">
-                          <h6>Mobile Number</h6>
-                          <p>{{organization.mobile_number}}</p>
-                        </div>
-                        <div class="item">
-                          <h6>Phone Number</h6>
-                          <p>{{organization.phone_number}}</p>
-                        </div>
-                        <div class="item">
-                          <h6>Verification Status</h6>
-                          <p>{% if organization.verification_status == "Verified" %}
-                            <span class="badge badge-success">Verified</span>
-                            {% elif organization.verification_status == "Pending" %}
-                            <span class="badge badge-muted">Pending</span>
-                            {% else %}
-                            <span class="badge badge-danger">Rejected</span>
-                            {% endif %}</p>
-                        </div>
-                        <div class="item">
-                          <h6>Verified By</h6>
-                          <p>{{organization.verified_by}}</p>
-                        </div>
+                    <div class="accordion-card-body">
+                      <div class="row p-2 mr-5">
+                        {% for doc in org_docs  %}
+                        <a class="card card--gray col-md-4" href="{{doc.document.url}}" target="_blank">
+                          <div class="align-vertical justify-content-center">  
+                            <h4 class="ic-receipt mr-2"></h4>
+                            <p>{{doc.file_name}}</p>
+                          </div>
+                        </a>
+                        {% endfor %}
                       </div>
-                      <div class="item desc">
-                        <h6>Description</h6>
-                        <p>{{organization.description}}</p>
+                      <div class="row org-doc-images">
+                        {% for image in org_images  %}
+                        <img
+                          src="{{image.document.url}}"
+                          width="100%"
+                          style="margin-left: 5px; margin-bottom: 10px"
+                        />
+                        {% endfor %}
                       </div>
                     </div>
                   </div>

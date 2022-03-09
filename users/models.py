@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.template.defaultfilters import slugify
 from users.abstract import AddressEntity, DateTimeEntity
-
+import os
 
 def dp_path(instance, filename):
     return f'user_{instance.user.id}/{filename}'
@@ -122,25 +122,20 @@ class OrganizationProfile(AddressEntity):
         return super().save(*args, **kwargs)
 
 
-def cv_path(instance, filename):
-    return f'user_{instance.candidate.user.id}/{filename}'
-
-
 class CandidateCV(DateTimeEntity):
     """ CV for the candidates """
 
-    cv = models.FileField(upload_to=dp_path)
+    cv = models.FileField(upload_to="candidate_cvs/")
     candidate = models.ForeignKey(
         UserProfile, on_delete=models.CASCADE, related_name='candidate_cv')
-
-
-def doc_path(instance, filename):
-    return f'user_{instance.organization.user.id}/{filename}'
 
 
 class OrganizationDocuments(DateTimeEntity):
     """ Organization Documents for the organization """
 
-    document = models.FileField(upload_to=doc_path)
+    document = models.FileField(upload_to="org_docs/")
     ogranization = models.ForeignKey(
         OrganizationProfile, on_delete=models.CASCADE, related_name='organization_paper')
+        
+    def file_name(self):
+        return os.path.basename(self.document.name)
