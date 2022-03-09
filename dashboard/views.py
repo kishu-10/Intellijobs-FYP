@@ -34,7 +34,7 @@ class DashboardVerifyOrganization(View):
 
     def post(self, request, *args, **kwargs):
         organization = get_object_or_404(
-            OrganizationProfile, user=self.kwargs.get('pk'))
+            OrganizationProfile, pk=self.kwargs.get('pk'))
         organization.verification_status = "Verified"
         organization.save()
         messages.success(
@@ -46,7 +46,7 @@ class DashboardRejectOrganizationVerification(View):
 
     def post(self, request, *args, **kwargs):
         organization = get_object_or_404(
-            OrganizationProfile, user=self.kwargs.get('pk'))
+            OrganizationProfile, pk=self.kwargs.get('pk'))
         organization.verification_status = "Rejected"
         organization.save()
         messages.success(
