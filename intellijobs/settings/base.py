@@ -165,7 +165,25 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 
 TINYMCE_DEFAULT_CONFIG = {
-    "height": "350px",
-    "width": "750px",
-    "menubar": False,
+    "height": "380px",
+    "width": "780px",
+    'cleanup_on_startup': True,
+    'selector': 'textarea',
+    'theme': 'silver',
+    'plugins': '''
+            textcolor save link image media preview codesample contextmenu
+            table code lists fullscreen  insertdatetime  nonbreaking
+            contextmenu directionality searchreplace wordcount visualblocks
+            visualchars code fullscreen autolink lists  charmap print  hr
+            anchor pagebreak
+            ''',
+    'toolbar1': '''
+            bold italic underline forecolor | alignleft alignright 
+            aligncenter alignjustify | indent outdent | bullist numlist table |
+            | link image media | code |
+            ''',
+    'contextmenu': 'formats | link image',
+    'menubar': False,
+    'statusbar': False,
+
 }
