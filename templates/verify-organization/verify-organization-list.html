@@ -1,0 +1,128 @@
+{% extends 'partials/base.html' %} {% load static %} {% block block_title %}
+<title>Organization List</title>
+{% endblock %} {% block main_content %}
+<div class="container">
+  <div class="page-header">
+    <h2 class="mb-0">Organizations</h2>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      {% for message in messages %}
+      <div class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert">
+          &times;
+        </button>
+        <strong>{{ message }}</strong>
+      </div>
+      {% endfor %}
+      <div class="table-responsive">
+        <div class="scrollable">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>S. No.</th>
+                <th>Organization Name</th>
+                <th>Status</th>
+                <th class="text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for organization in organizations %}
+              <tr>
+                <td class="cell-num">{{ forloop.counter}}</td>
+                <td>{{ organization.name }}</td>
+                <td>
+                  {% if organization.is_active %}
+                  <span class="badge badge-success">Active</span>
+                  {% else %}
+                  <span class="badge badge-muted">Inactive</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="input-group input-action">
+                    <a
+                      class="btn btn-icon-only action-info"
+                      href="{% url 'dashboard:category_update' category.pk %}"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="Edit"
+                    >
+                      <i class="ic-edit"></i>
+                    </a>
+                    <a
+                      class="btn btn-icon-only action-danger"
+                      data-placement="top"
+                      data-toggle="modal"
+                      data-target="#deleteModal"
+                      title="Delete"
+                      data-url="{% url 'dashboard:category_delete' category.pk %}"
+                    >
+                      <i class="ic-delete"></i>
+                  </a>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock main_content %} 
+{% block modal %}
+<div
+  class="modal fade modal-deleteDialog"
+  id="deleteModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title"></div>
+        <span
+          class="font-14"
+          type="button"
+          aria-hidden="true"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <div class="ic-close"></div>
+        </span>
+      </div>
+      <div class="modal-body">
+        <span class="ic-warning-alt text-danger"></span>
+        <h6 class="title">Delete Job Category</h6>
+        <p class="msg">Warning! After deleting it, It cannot be undone.</p>
+        <div class="modal-button">
+          <form id="deleteJobCategoryForm" method="POST">
+          {% csrf_token %}
+          <btn class="btn btn-default" data-dismiss="modal">Cancel</btn>
+          <btn class="btn btn-danger" id="delete-btn">Yes, Delete It</btn>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock modal %} {% block extra_scripts %}
+<script>
+  $("#deleteModal").on("shown.bs.modal", function (event) {
+    var button =  $(event.relatedTarget)
+    _url = button.data('url')
+    console.log(_url)
+    event.preventDefault();
+    $("#deleteJobCategoryForm").attr("action", _url)
+    console.log($("deleteJobCategoryForm").attr('action'))
+    $("#delete-btn").on("click", function (click) {
+      click.preventDefault();
+      $("#deleteJobCategoryForm").submit()
+    });
+  });
+</script>
+
+{% endblock extra_scripts %}
