@@ -12,20 +12,20 @@ class DashboardIndexView(TemplateView):
     template_name = "index.html"
 
 
-class VerifyOrganizationList(ListView):
-    model = User
-    queryset = User.objects.filter(user_type="organization")
+class DashboardVerifyOrganizationList(ListView):
+    model = OrganizationProfile
+    queryset = OrganizationProfile.objects.all()
     template_name = "verify-organization/verify-organization-list.html"
     context_object_name = "organizations"
 
 
-class VerifyOrganization(View):
+class DashboardVerifyOrganization(View):
     template_name = "verify-organization/verify-organization.html"
 
     def get(self, request, *args, **kwargs):
         context = dict()
         organization = get_object_or_404(
-            OrganizationProfile, user=self.kwargs.get('pk'))
+            OrganizationProfile, pk=self.kwargs.get('pk'))
         org_docs = OrganizationDocuments.objects.filter(
             ogranization=organization)
         context['organization'] = organization
@@ -35,8 +35,20 @@ class VerifyOrganization(View):
     def post(self, request, *args, **kwargs):
         organization = get_object_or_404(
             OrganizationProfile, user=self.kwargs.get('pk'))
-        organization.is_verified = True
+        organization.verification_status = "Verified"
         organization.save()
         messages.success(
             self.request, f"{organization.name} verified successfully.")
         return redirect('dashboard:verify_organization_list')
+
+
+class DashboardRejectOrganizationVerification(View):
+
+    def post(self, request, *args, **kwargs):
+        organization = get_object_or_404(
+            OrganizationProfile, user=self.kwargs.get('pk'))
+        organization.verification_status = "Rejected"
+        organization.save()
+        messages.success(
+            self.request, f"{organization.name} verification rejected.")
+        return redirect("dashboard:verify_organization_list")

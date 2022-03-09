@@ -30,6 +30,17 @@ class AuthUser(AbstractUser):
     def __str__(self):
         return self.username
 
+    @property
+    def has_dashboard_access(self):
+        access = False
+        if self.is_superuser:
+            access = True
+        elif self.user_type == "Staff":
+            access = True
+        elif self.user_type == "Organization" and self.user.org_profile.verification_status == "Verified":
+            access = True
+        return access
+
 
 class UserProfile(AddressEntity):
     """ User Profile for Candidate """
@@ -79,6 +90,12 @@ class UserProfile(AddressEntity):
 class OrganizationProfile(AddressEntity):
     """ Organization Profile for the organizations """
 
+    VERIFICATION_STATUS = [
+        ('Pending', 'Pending'),
+        ('Verified', 'Verified'),
+        ('Rejected', 'Rejected'),
+    ]
+
     name = models.CharField(max_length=500)
     slug = models.SlugField(max_length=500, unique=True)
     mobile_number = models.CharField(max_length=15, blank=True, null=True)
@@ -86,6 +103,10 @@ class OrganizationProfile(AddressEntity):
     display_picture = models.ImageField(
         upload_to=dp_path, null=True, blank=True)
     description = models.TextField()
+    verification_status = models.CharField(
+        max_length=100, choices=VERIFICATION_STATUS, default="Pending")
+    verified_by = models.ForeignKey(
+        AuthUser, on_delete=models.SET_NULL, null=True, related_name="organization_verifier")
     user = models.OneToOneField(
         to=AuthUser,
         on_delete=models.CASCADE,

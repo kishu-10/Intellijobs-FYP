@@ -1,93 +1,204 @@
 {% extends 'partials/base.html' %} {% load static %} {% block main_content %}
 <div class="container">
   <div class="page-header">
-    <h2 class="mb-0">Update Category</h2>
+    <h2 class="mb-0">Verify Organization</h2>
     <a
       class="btn btn-sm btn-info btn-icon"
-      href="{% url 'dashboard:category_list' %}"
+      href="{% url 'dashboard:verify_organization_list' %}"
     >
-      <span class="ic-arrow-left"></span>Back to Categories
+      <span class="ic-arrow-left"></span>Back to Organizations
     </a>
   </div>
   <div class="card section-spacer">
     <div class="card-body">
-      <div class="row">
-        <div class="col-lg-4">
-          <h3 class="section-header">Category Detail</h3>
-          <p class="section-para">Update your category details here</p>
+      <div class="row mt-2">
+        <div class="col-lg-3">
+          <div class="form-row justify-content-center text-center">
+            {% if organization.display_picture %}
+            <img
+              src="{{organization.display_picture.url}}"
+              width="300dp"
+              style="margin-left: 5px; margin-bottom: 10px"
+            />
+            {% else %}
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8oSUHS5yxksmIz2xmT1AD-TQpWx0OuRFMB6AM_mM4KNSOJ-M-k1QrGQsMrXPf1p8V3SA&usqp=CAU"
+              width="300dp"
+              style="margin-left: 5px; margin-bottom: 10px"
+            />
+            {% endif %}
+            <h2 class="ml-2 mb-3">{{organization.name}}</h2>
+          </div>
         </div>
-        <div class="col-lg-8">
+        <div class="col-lg-9">
           <form
             method="post"
-            action="{% url 'dashboard:category_update' category.pk %}"
+            action="{% url 'dashboard:verify_organization' organization.pk %}"
             enctype="multipart/form-data"
           >
             {% csrf_token %}
-            <div class="form-row mt-lg-0 mt-3">
-              <div class="col-md-6 form-group">
-                <label for="">Category Image</label>
-                <div class="form-row">
-                  <img
-                    src="{{category.image.url}}"
-                    width="300dp"
-                    style="margin-left: 5px; margin-bottom: 10px"
-                    id="categoryImagePreview"
-                  />
-                </div>
-                <div class="custom-file">
-                  <input
-                    class="custom-file-input"
-                    type="file"
-                    name="image"
-                    accept="image"
-                    id="imageInput"
-                    value={{category.image.url}}
-                  />
-                  <label class="custom-file-label">{{category.image.name}}</label>
-                </div>
-                <p class="text-gray font-12 mt-2">
-                  File Size must be size &le; 200KB. Image Resolution must be
-                  &le; 1280*720
-                </p>
-                <p class="error">{{form.image.errors|striptags}}</p>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="col-md-6 form-group">
-                <label for="name">Name</label>
-                <input
-                  class="form-control"
-                  type="text"
-                  name="name"
-                  value="{{category.name}}"
-                />
-                <p class="error">{{form.name.errors|striptags}}</p>
-              </div>
-            </div>
-            <div class="form-row mt-lg-0 mt-3">
-              <div class="col-xl-6 md-6 form-group">
-                <div class="custom-control custom custom-switch">
-                  <input
-                    name="is_active"
-                    class="custom-control-input"
-                    type="checkbox"
-                    id="customSwitch1"
-                    {% if category.is_active %}
-                    checked
-                    {% endif %}
-                  /><label class="custom-control-label" for="customSwitch1"
-                    >Active
-                  </label>
+            <div class="form-row mt-lg-0 mt-3 card--white">
+              <div class="accordion col-lg" id="profileDetails">
+                <div class="card--white">
+                  <div
+                    data-toggle="collapse"
+                    data-target="#collapseOne"
+                    aria-expanded="true"
+                    aria-controls="collapseOne"
+                  >
+                    <span class="font-16 font-weight-bold">Profile Details</span>
+                    <i class="ic-chevron-down accordion-drop-icon"></i>
+                  </div>
+                  <div
+                    id="collapseOne"
+                    aria-labelledby="faqTwo"
+                    data-parent="#profileDetails"
+                  >
+                    <div class="accordion-card-body font-14">
+                      <div class="organization-details">
+                        <div class="item">
+                          <h6>Mobile Number</h6>
+                          <p>{{organization.mobile_number}}</p>
+                        </div>
+                        <div class="item">
+                          <h6>Phone Number</h6>
+                          <p>{{organization.phone_number}}</p>
+                        </div>
+                        <div class="item">
+                          <h6>Verification Status</h6>
+                          <p>{% if organization.verification_status == "Verified" %}
+                            <span class="badge badge-success">Verified</span>
+                            {% elif organization.verification_status == "Pending" %}
+                            <span class="badge badge-muted">Pending</span>
+                            {% else %}
+                            <span class="badge badge-danger">Rejected</span>
+                            {% endif %}</p>
+                        </div>
+                        <div class="item">
+                          <h6>Verified By</h6>
+                          <p>{{organization.verified_by}}</p>
+                        </div>
+                      </div>
+                      <div class="item desc">
+                        <h6>Description</h6>
+                        <p>{{organization.description}}</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="section-footer">
+            <div class="form-row pt-5 card--white">
+              <div class="accordion col-lg" id="addressDetails">
+                <div class="card--white">
+                  <div
+                    class="collapsed"
+                    data-toggle="collapse"
+                    data-target="#collapseTwo"
+                    aria-expanded="false"
+                    aria-controls="collapseTwo"
+                  >
+                    <span class="font-16 font-weight-bold">Address Details</span>
+                    <i class="ic-chevron-down accordion-drop-icon"></i>
+                  </div>
+                  <div
+                    class="collapse"
+                    id="collapseTwo"
+                    aria-labelledby="faqTwo"
+                    data-parent="#addressDetails"
+                  >
+                    <div class="accordion-card-body font-14">
+                      <div class="organization-details">
+                        <div class="item">
+                          <h6>Country</h6>
+                          <p>{{organization.country}}</p>
+                        </div>
+                        <div class="item">
+                          <h6>Province</h6>
+                          <p>{{organization.province}}</p>
+                        </div>
+                        <div class="item">
+                          <h6>District</h6>
+                          <p>{{organization.district}}</p>
+                        </div>
+                        <div class="item">
+                          <h6>Area</h6>
+                          <p>{{organization.area}}</p>
+                        </div>
+                        <div class="item">
+                          <h6>City</h6>
+                          <p>{{organization.city}}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-row pt-5 card--white">
+              <div class="accordion col-lg" id="OrgDocs">
+                <div class="card--white">
+                  <div
+                    class="collapsed"
+                    data-toggle="collapse"
+                    data-target="#collapseThree"
+                    aria-expanded="false"
+                    aria-controls="collapseThree"
+                  >
+                    <span class="font-16 font-weight-bold">Organization Documents</span>
+                    <i class="ic-chevron-down accordion-drop-icon"></i>
+                  </div>
+                  <div
+                    class="collapse"
+                    id="collapseThree"
+                    aria-labelledby="faqTwo"
+                    data-parent="#OrgDocs"
+                  >
+                    <div class="accordion-card-body font-14">
+                      <div class="organization-details">
+                        <div class="item">
+                          <h6>Mobile Number</h6>
+                          <p>{{organization.mobile_number}}</p>
+                        </div>
+                        <div class="item">
+                          <h6>Phone Number</h6>
+                          <p>{{organization.phone_number}}</p>
+                        </div>
+                        <div class="item">
+                          <h6>Verification Status</h6>
+                          <p>{% if organization.verification_status == "Verified" %}
+                            <span class="badge badge-success">Verified</span>
+                            {% elif organization.verification_status == "Pending" %}
+                            <span class="badge badge-muted">Pending</span>
+                            {% else %}
+                            <span class="badge badge-danger">Rejected</span>
+                            {% endif %}</p>
+                        </div>
+                        <div class="item">
+                          <h6>Verified By</h6>
+                          <p>{{organization.verified_by}}</p>
+                        </div>
+                      </div>
+                      <div class="item desc">
+                        <h6>Description</h6>
+                        <p>{{organization.description}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="section-footer mt-5">
               <a
                 class="btn btn-outline-gray"
                 href="{% url 'dashboard:category_list' %}"
                 >Cancel</a
               >
-              <button class="btn btn-success" type="submit">Submit</button>
+              <a class="btn text-white btn-danger" 
+                  data-toggle="modal" 
+                  data-target="#rejectModal" 
+                  data-url="{% url 'dashboard:reject_organization_verify' organization.pk %}">Reject</a>
+              <button class="btn btn-success" type="submit">Verify</button>
             </div>
           </form>
         </div>
@@ -95,16 +206,59 @@
     </div>
   </div>
 </div>
-{% endblock main_content %} 
+{% endblock main_content %} {% block modal %}
+<div
+  class="modal fade modal-deleteDialog"
+  id="rejectModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title"></div>
+        <span
+          class="font-14"
+          type="button"
+          aria-hidden="true"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <div class="ic-close"></div>
+        </span>
+      </div>
+      <div class="modal-body">
+        <span class="ic-warning-alt text-danger"></span>
+        <h6 class="title">Reject Organization Verification</h6>
+        <p class="msg">Warning! After rejection it, It cannot be undone.</p>
+        <div class="modal-button">
+          <form id="rejectOrganizationForm" method="POST">
+          {% csrf_token %}
+          <btn class="btn btn-default" data-dismiss="modal">Cancel</btn>
+          <btn class="btn btn-danger" id="delete-btn">Yes, Reject It</btn>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-
-{% block extra_scripts %}
+{% endblock modal %} {% block extra_scripts %}
 <script>
-  imageInput.onchange = (evt) => {
-    const [file] = imageInput.files;
-    if (file) {
-      categoryImagePreview.src = URL.createObjectURL(file);
-    }
-  };
+  $("#rejectModal").on("shown.bs.modal", function (event) {
+    var button = $(event.relatedTarget);
+    _url = button.data("url");
+    console.log(_url);
+    event.preventDefault();
+    $("#rejectOrganizationForm").attr("action", _url);
+    console.log($("rejectOrganizationForm").attr("action"));
+    $("#delete-btn").on("click", function (click) {
+      click.preventDefault();
+      $("#rejectOrganizationForm").submit();
+    });
+  });
 </script>
-{% endblock %}
+
+{% endblock extra_scripts %}
