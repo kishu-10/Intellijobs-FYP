@@ -165,8 +165,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 
 TINYMCE_DEFAULT_CONFIG = {
-    "height": "380px",
-    "width": "780px",
+    "height": "350px",
+    "width": "700px",
     'cleanup_on_startup': True,
     'selector': 'textarea',
     'theme': 'silver',
