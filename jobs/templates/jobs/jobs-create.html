@@ -1,11 +1,10 @@
-{% extends 'partials/base.html' %} {% load static %} {% block main_content %}
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block main_content %}
 <div class="container">
   <div class="page-header">
     <h2 class="mb-0">Add Job</h2>
-    <a
-      class="btn btn-sm btn-info btn-icon"
-      href="{% url 'dashboard:jobs_list' %}"
-    >
+    <a class="btn btn-sm btn-info btn-icon" href="{% url 'dashboard:jobs_list' %}">
       <span class="ic-arrow-left"></span>Back to Jobs
     </a>
   </div>
@@ -18,11 +17,7 @@
           <p class="section-para">Add your job details here</p>
         </div>
         <div class="col-lg-9">
-          <form
-            method="post"
-            action="{% url 'dashboard:jobs_create' %}"
-            enctype="multipart/form-data"
-          >
+          <form method="post" action="{% url 'dashboard:jobs_create' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-row mt-lg-0 mt-3">
               <div class="col-md-9 form-group">
@@ -34,12 +29,8 @@
             <div class="form-row">
               <div class="col-md-3 form-group">
                 <label for="no_of_vacancy">No. of Vacancy</label>
-                <input
-                  class="form-control"
-                  type="number"
-                  name="no_of_vacancy"
-                  value="{{form.no_of_vacancy.value|default_if_none:''}}"
-                />
+                <input class="form-control" type="number" name="no_of_vacancy"
+                  value="{{form.no_of_vacancy.value|default_if_none:''}}" />
                 <p class="error">{{form.no_of_vacancy.errors|striptags}}</p>
               </div>
               <div class="col-md-3 form-group">
@@ -49,12 +40,8 @@
               </div>
               <div class="col-md-3 form-group">
                 <label for="deadline">Deadline</label>
-                <input
-                  class="form-control"
-                  type="date"
-                  name="deadline"
-                  value="{{form.deadline.value|default_if_none:''}}"
-                />
+                <input class="form-control" type="date" name="deadline"
+                  value="{{form.deadline.value|default_if_none:''|date:"Y-m-d"}}" />
                 <p class="error">{{form.deadline.errors|striptags}}</p>
               </div>
             </div>
@@ -66,7 +53,7 @@
               </div>
               <div class="col-md-3 form-group">
                 <label for="job_level">Job Level</label>
-               {{form.job_level}}
+                {{form.job_level}}
                 <p class="error">{{form.job_level.errors|striptags}}</p>
               </div>
               <div class="col-md-3 form-group">
@@ -125,23 +112,14 @@
             <div class="form-row mt-lg-0 mt-3">
               <div class="col-xl-6 md-6 form-group">
                 <div class="custom-control custom custom-switch">
-                  <input
-                    name="is_active"
-                    class="custom-control-input"
-                    type="checkbox"
-                    id="customSwitch1"
-                  /><label class="custom-control-label" for="customSwitch1"
-                    >Active
+                  <input name="is_active" class="custom-control-input" type="checkbox" id="customSwitch1" /><label
+                    class="custom-control-label" for="customSwitch1">Active
                   </label>
                 </div>
               </div>
             </div>
             <div class="section-footer">
-              <a
-                class="btn btn-outline-gray"
-                href="{% url 'dashboard:category_list' %}"
-                >Cancel</a
-              >
+              <a class="btn btn-outline-gray" href="{% url 'dashboard:category_list' %}">Cancel</a>
               <button class="btn btn-success" type="submit">Submit</button>
             </div>
           </form>

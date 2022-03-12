@@ -171,6 +171,7 @@ TINYMCE_DEFAULT_CONFIG = {
     'cleanup_on_startup': True,
     'selector': 'textarea',
     'theme': 'silver',
+    'content_style': 'body {font-size: 13px;}',
     'plugins': '''
             textcolor save link image media preview codesample contextmenu
             table code lists fullscreen  insertdatetime  nonbreaking

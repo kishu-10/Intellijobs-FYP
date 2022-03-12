@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, TemplateView, View
+from django.views.generic import CreateView, ListView, TemplateView, View, UpdateView
 from intellijobs.tasks import send_email_verfication
 from users.models import (OrganizationDocuments, OrganizationProfile,
                           UserProfile)
@@ -83,13 +83,15 @@ class DashboardRegisterStaffCreateView(CreateView):
 
     def form_valid(self, form):
         user = form.save(commit=False)
+        user.set_password(form.cleaned_data.get('password'))
         user.user_type = "Staff"
         user.save()
         messages.success(
             self.request, f"{form.cleaned_data.get('username')} created successfully.")
         subject = "Login Credentials for Dashboard - IntelliJobs"
         message = render_to_string('email-templates/staff-login-credentials.html', {
-            'url': self.request.build_absolute_uri('/dashboard'),
+            'url': self.request.build_absolute_uri('/dashboard/'),
+            'logo': self.request.build_absolute_uri('/static/assets/images/logo.png'),
             'email': form.cleaned_data.get('email'),
             'username': form.cleaned_data.get('username'),
             'password': form.cleaned_data.get('password')
@@ -97,5 +99,41 @@ class DashboardRegisterStaffCreateView(CreateView):
 
         send_email_verfication.delay(
             subject, message, form.cleaned_data.get('email'))
-        print(form.cleaned_data.get('email'))
         return super().form_valid(form)
+
+
+class DashboardRegisterStaffUpdateView(UpdateView):
+    model = User
+    form_class = StaffRegistrationForm
+    template_name = "staff-registration/staff-register-update.html"
+    success_url = reverse_lazy("dashboard:staff_register_list")
+    context_object_name = "staff"
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.set_password(form.cleaned_data.get('password'))
+        instance.save()
+        user = self.get_object()
+        messages.success(
+            self.request, f"{user.username} updated successfully.")
+        subject = "Login Credentials for Dashboard - IntelliJobs"
+        message = render_to_string('email-templates/staff-login-credentials.html', {
+            'url': self.request.build_absolute_uri('/dashboard/'),
+            'logo': self.request.build_absolute_uri('/static/assets/images/logo.png'),
+            'email': form.cleaned_data.get('email'),
+            'username': form.cleaned_data.get('username'),
+            'password': form.cleaned_data.get('password')
+        })
+        send_email_verfication.delay(
+            subject, message, form.cleaned_data.get('email'))
+        return super().form_valid(form)
+
+
+class DashboardRegisterStaffDeleteView(View):
+
+    def post(self, request, *args, **kwargs):
+        staff = get_object_or_404(User, pk=self.kwargs.get('pk'))
+        staff.delete()
+        messages.success(
+            self.request, f"{staff.username} deleted successfully.")
+        return redirect("dashboard:staff_register_list")
