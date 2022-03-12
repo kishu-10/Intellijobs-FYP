@@ -1,0 +1,75 @@
+{% extends 'partials/base.html' %} {% load static %} {% block block_title %}
+<title>Registered Staffs List</title>
+{% endblock %} {% block main_content %}
+<div class="container">
+  <div class="page-header">
+    <h2 class="mb-0">Registered Staffs</h2>
+    <a
+      class="btn btn-sm btn-info btn-icon"
+      href="{% url 'dashboard:staff_register_create' %}"
+    >
+      <span class="ic-add"></span>Add Staff
+    </a>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      {% for message in messages %}
+      <div class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert">
+          &times;
+        </button>
+        <strong>{{ message }}</strong>
+      </div>
+      {% endfor %}
+      <div class="table-responsive">
+        <div class="scrollable">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>S. No.</th>
+                <th>Username</th>
+                <th>Email Address</th>
+                <th>Registered Date</th>
+                <th class="text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for staff in staffs %}
+              <tr>
+                <td class="cell-num">{{ forloop.counter}}</td>
+                <td>{{ staff.username }}</td>
+                <td>{{ staff.email }}</td>
+                <td>{{ staff.date_joined|date:"Y-m-d" }}</td>
+                <td>
+                  <div class="input-group input-action">
+                    <a
+                      class="btn btn-icon-only action-info"
+                      href="{% url 'dashboard:jobs_update' staff.pk %}"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="Edit"
+                    >
+                      <i class="ic-edit"></i>
+                    </a>
+                    <a
+                      class="btn btn-icon-only action-danger"
+                      data-placement="top"
+                      data-toggle="modal"
+                      data-target="#deleteModal"
+                      title="Delete"
+                      data-url="{% url 'dashboard:jobs_delete' staff.pk %}"
+                    >
+                      <i class="ic-delete"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock main_content %}

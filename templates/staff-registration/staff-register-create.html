@@ -1,0 +1,64 @@
+{% extends 'partials/base.html' %} {% load static %} {% block main_content %}
+<div class="container">
+  <div class="page-header">
+    <h2 class="mb-0">Register Staff</h2>
+    <a
+      class="btn btn-sm btn-info btn-icon"
+      href="{% url 'dashboard:staff_register_list' %}"
+    >
+      <span class="ic-arrow-left"></span>Back to Staffs
+    </a>
+  </div>
+  <div class="card section-spacer">
+    <div class="card-body">
+        <div class="row">
+          <div class="col-lg-3">
+            <h3 class="section-header">Staff Detail</h3>
+            <p class="section-para">Add your staff details here</p>
+          </div>
+          <div class="col-lg-8">
+            <form
+              method="post"
+              action="{% url 'dashboard:staff_register_create' %}"
+              enctype="multipart/form-data"
+            >
+              {% csrf_token %}
+              <div class="form-row">
+                <div class="col-md-4 form-group">
+                  <label for="email">Email Address</label>
+                  <input
+                    class="form-control"
+                    type="email"
+                    name="email"
+                    value="{{form.email.value|default_if_none:''}}"
+                  />
+                  <p class="error">{{form.email.errors|striptags}}</p>
+                </div>
+                <div class="col-md-4 form-group">
+                  <label for="username">Username</label>
+                  {{form.username}}
+                  <p class="error">{{form.username.errors|striptags}}</p>
+                </div>
+                <div class="col-md-4 form-group">
+                  <label for="password">Password</label>
+                  {{form.password}}
+                  <p class="error">{{form.password.errors|striptags}}</p>
+                </div>
+              </div>
+          </div>
+        </div>
+              <div class="section-footer">
+                <a
+                  class="btn btn-outline-gray"
+                  href="{% url 'dashboard:category_list' %}"
+                  >Cancel</a
+                >
+                <button class="btn btn-success" type="submit">Submit</button>
+              </div>
+            </form>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock main_content %}
