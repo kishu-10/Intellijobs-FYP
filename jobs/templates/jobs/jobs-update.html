@@ -20,7 +20,7 @@
         <div class="col-lg-8">
           <form
             method="post"
-            action="{% url 'dashboard:jobs_update' %}"
+            action="{% url 'dashboard:jobs_update' job.pk %}"
             enctype="multipart/form-data"
           >
             {% csrf_token %}
@@ -38,7 +38,7 @@
                   class="form-control"
                   type="number"
                   name="no_of_vacancy"
-                  value="{{job.vacancy}}"
+                  value="{{job.no_of_vacancy}}"
                 />
                 <p class="error">{{form.no_of_vacancy.errors|striptags}}</p>
               </div>
@@ -53,7 +53,7 @@
                   class="form-control"
                   type="date"
                   name="deadline"
-                  value="{{job.deadline}}"
+                  value="{{job.deadline|date:"Y-m-d"}}"
                 />
                 <p class="error">{{form.deadline.errors|striptags}}</p>
               </div>

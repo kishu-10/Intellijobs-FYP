@@ -1,13 +1,13 @@
-{% extends 'partials/base.html' %} {% load static %} {% block block_title %}
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block block_title %}
 <title>Registered Staffs List</title>
-{% endblock %} {% block main_content %}
+{% endblock %}
+{% block main_content %}
 <div class="container">
   <div class="page-header">
     <h2 class="mb-0">Registered Staffs</h2>
-    <a
-      class="btn btn-sm btn-info btn-icon"
-      href="{% url 'dashboard:staff_register_create' %}"
-    >
+    <a class="btn btn-sm btn-info btn-icon" href="{% url 'dashboard:staff_register_create' %}">
       <span class="ic-add"></span>Add Staff
     </a>
   </div>
@@ -42,23 +42,13 @@
                 <td>{{ staff.date_joined|date:"Y-m-d" }}</td>
                 <td>
                   <div class="input-group input-action">
-                    <a
-                      class="btn btn-icon-only action-info"
-                      href="{% url 'dashboard:jobs_update' staff.pk %}"
-                      data-toggle="tooltip"
-                      data-placement="top"
-                      title="Edit"
-                    >
+                    <a class="btn btn-icon-only action-info" href="{% url 'dashboard:staff_register_update' staff.pk %}"
+                      data-toggle="tooltip" data-placement="top" title="Edit">
                       <i class="ic-edit"></i>
                     </a>
-                    <a
-                      class="btn btn-icon-only action-danger"
-                      data-placement="top"
-                      data-toggle="modal"
-                      data-target="#deleteModal"
-                      title="Delete"
-                      data-url="{% url 'dashboard:jobs_delete' staff.pk %}"
-                    >
+                    <a class="btn btn-icon-only action-danger" data-placement="top" data-toggle="modal"
+                      data-target="#deleteStaffModal" title="Delete"
+                      data-url="{% url 'dashboard:staff_register_delete' staff.pk %}">
                       <i class="ic-delete"></i>
                     </a>
                   </div>
@@ -73,3 +63,48 @@
   </div>
 </div>
 {% endblock main_content %}
+{% block modal %}
+<div class="modal fade modal-deleteDialog" id="deleteStaffModal" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title"></div>
+        <span class="font-14" type="button" aria-hidden="true" data-dismiss="modal" aria-label="Close">
+          <div class="ic-close"></div>
+        </span>
+      </div>
+      <div class="modal-body">
+        <span class="ic-warning-alt text-danger"></span>
+        <h6 class="title">Delete Staff</h6>
+        <p class="msg">Warning! After deleting it, It cannot be undone.</p>
+        <div class="modal-button">
+          <form id="deleteStaffForm" method="POST">
+            {% csrf_token %}
+            <btn class="btn btn-default" data-dismiss="modal">Cancel</btn>
+            <btn class="btn btn-danger" id="delete-btn">Yes, Delete It</btn>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock modal %}
+
+{% block extra_scripts %}
+<script>
+  $("#deleteStaffModal").on("shown.bs.modal", function (event) {
+    var button = $(event.relatedTarget);
+    _url = button.data("url");
+    console.log(_url);
+    event.preventDefault();
+    $("#deleteStaffForm").attr("action", _url);
+    console.log($("deleteStaffForm").attr("action"));
+    $("#delete-btn").on("click", function (click) {
+      click.preventDefault();
+      $("#deleteStaffForm").submit();
+    });
+  });
+</script>
+
+{% endblock extra_scripts %}

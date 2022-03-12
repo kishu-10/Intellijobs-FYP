@@ -1,6 +1,9 @@
-{% extends 'partials/base.html' %} {% load static %} {% block block_title %}
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block block_title %}
 <title>Registered Organization List</title>
-{% endblock %} {% block main_content %}
+{% endblock %}
+{% block main_content %}
 <div class="container">
   <div class="page-header">
     <h2 class="mb-0">Registered Organizations</h2>
@@ -42,13 +45,9 @@
                 </td>
                 <td>
                   <div class="input-group input-action">
-                    <a
-                      class="btn btn-icon-only action-info"
-                      href="{% url 'dashboard:verify_organization' organization.pk %}"
-                      data-toggle="tooltip"
-                      data-placement="top"
-                      title="View"
-                    >
+                    <a class="btn btn-icon-only action-info"
+                      href="{% url 'dashboard:verify_organization' organization.pk %}" data-toggle="tooltip"
+                      data-placement="top" title="View">
                       <i class="ic-view"></i>
                     </a>
                   </div>
@@ -62,4 +61,4 @@
     </div>
   </div>
 </div>
-{% endblock main_content %} 
+{% endblock main_content %}

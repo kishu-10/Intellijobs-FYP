@@ -6,7 +6,7 @@ from jobs.views import (DashboardJobCategoryCreateView,
                         DashboardJobDeleteView, DashboardJobListView,
                         DashboardJobUpdateView)
 
-from dashboard.views import DashboardIndexView, DashboardRegisterStaffCreateView, DashboardRegisterStaffListView, DashboardRejectOrganizationVerification, DashboardVerifyOrganization, DashboardVerifyOrganizationList
+from dashboard.views import DashboardIndexView, DashboardRegisterStaffCreateView, DashboardRegisterStaffDeleteView, DashboardRegisterStaffListView, DashboardRegisterStaffUpdateView, DashboardRejectOrganizationVerification, DashboardVerifyOrganization, DashboardVerifyOrganizationList
 
 app_name = "dashboard"
 
@@ -26,6 +26,10 @@ urlpatterns = [
          name="staff_register_create"),
     path("register-staffs/", DashboardRegisterStaffListView.as_view(),
          name="staff_register_list"),
+    path("register-staffs/<int:pk>-update/", DashboardRegisterStaffUpdateView.as_view(),
+         name="staff_register_update"),
+    path("register-staffs/<int:pk>-delete/", DashboardRegisterStaffDeleteView.as_view(),
+         name="staff_register_delete"),
 
     # Jobs
     path("jobs/", DashboardJobListView.as_view(), name="jobs_list"),
