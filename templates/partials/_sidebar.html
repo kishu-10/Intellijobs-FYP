@@ -9,7 +9,7 @@
   <div class="sidebar-list-wrapper">
     <ul class="list sidebar-list scrollable">
       <li class="sidebar-item">
-        <a class="sidebar-link active" href="{% url 'dashboard:index' %}"
+        <a class="sidebar-link {% if active_url == "index" %}active{% endif %}" href="{% url 'dashboard:index' %}"
           >Dashboard</a
         >
       </li>
@@ -23,22 +23,22 @@
           aria-controls="Products"
           >Jobs</a
         >
-        <ul class="list pl-3 mt-1" id="jobs">
+        <ul class="list {% if not jobs_url_status %}collapse{% endif %} pl-3 mt-1" id="jobs">
           <li class="sidebar-item">
-            <a class="sidebar-link" href="{% url 'dashboard:category_list' %}">Job Category</a>
+            <a class="sidebar-link {% if active_url == "job-category" %}active{% endif %}" href="{% url 'dashboard:category_list' %}">Job Category</a>
           </li>
           <li class="sidebar-item">
-            <a class="sidebar-link" href="{% url 'dashboard:jobs_list' %}">Jobs</a>
+            <a class="sidebar-link {% if active_url == "jobs" %}active{% endif %}" href="{% url 'dashboard:jobs_list' %}">Jobs</a>
           </li>
         </ul>
       </li>
       <li class="sidebar-item">
-        <a class="sidebar-link" href="{% url 'dashboard:verify_organization_list' %}"
+        <a class="sidebar-link {% if active_url == "verify-organization" %}active{% endif %}" href="{% url 'dashboard:verify_organization_list' %}"
           >Verify Organizations</a
         >
       </li>
       <li class="sidebar-item">
-        <a class="sidebar-link" href="{% url 'dashboard:staff_register_list' %}"
+        <a class="sidebar-link {% if active_url == "register-staff" %}active{% endif %}" href="{% url 'dashboard:staff_register_list' %}"
           >Register Staffs</a
         >
       </li>
