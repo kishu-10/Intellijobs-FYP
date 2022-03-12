@@ -1,8 +1,14 @@
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import TemplateView, View, ListView
-from users.models import OrganizationDocuments, OrganizationProfile
-from django.contrib.auth import get_user_model
 from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import render_to_string
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, ListView, TemplateView, View
+from intellijobs.tasks import send_email_verfication
+from users.models import (OrganizationDocuments, OrganizationProfile,
+                          UserProfile)
+
+from .forms import *
 
 User = get_user_model()
 
@@ -33,7 +39,7 @@ class DashboardVerifyOrganization(View):
         for i in org_files:
             if i.document.name.endswith(('.png', '.jpg', '.jpeg', '.bmp', '.svg', '.webp')):
                 org_images.append(i)
-            else: 
+            else:
                 org_docs.append(i)
         context['organization'] = organization
         context['org_docs'] = org_docs
@@ -60,3 +66,36 @@ class DashboardRejectOrganizationVerification(View):
         messages.success(
             self.request, f"{organization.name} verification rejected.")
         return redirect("dashboard:verify_organization_list")
+
+
+class DashboardRegisterStaffListView(ListView):
+    model = User
+    queryset = User.objects.filter(user_type="Staff")
+    template_name = "staff-registration/staff-register-list.html"
+    context_object_name = "staffs"
+
+
+class DashboardRegisterStaffCreateView(CreateView):
+    model = User
+    form_class = StaffRegistrationForm
+    template_name = "staff-registration/staff-register-create.html"
+    success_url = reverse_lazy("dashboard:staff_register_list")
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.user_type = "Staff"
+        user.save()
+        messages.success(
+            self.request, f"{form.cleaned_data.get('username')} created successfully.")
+        subject = "Login Credentials for Dashboard - IntelliJobs"
+        message = render_to_string('email-templates/staff-login-credentials.html', {
+            'url': self.request.build_absolute_uri('/dashboard'),
+            'email': form.cleaned_data.get('email'),
+            'username': form.cleaned_data.get('username'),
+            'password': form.cleaned_data.get('password')
+        })
+
+        send_email_verfication.delay(
+            subject, message, form.cleaned_data.get('email'))
+        print(form.cleaned_data.get('email'))
+        return super().form_valid(form)

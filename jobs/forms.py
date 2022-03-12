@@ -6,6 +6,7 @@ from tinymce.widgets import TinyMCE
 
 
 class CategoryForm(forms.ModelForm):
+    use_required_attribute = False
 
     class Meta:
         model = Category
@@ -13,6 +14,8 @@ class CategoryForm(forms.ModelForm):
 
 
 class JobForm(forms.ModelForm):
+    use_required_attribute = False
+
     description = forms.CharField(
         widget=TinyMCE())
     skills = forms.CharField(

@@ -6,17 +6,26 @@ from jobs.views import (DashboardJobCategoryCreateView,
                         DashboardJobDeleteView, DashboardJobListView,
                         DashboardJobUpdateView)
 
-from dashboard.views import DashboardIndexView, DashboardRejectOrganizationVerification, DashboardVerifyOrganization, DashboardVerifyOrganizationList
+from dashboard.views import DashboardIndexView, DashboardRegisterStaffCreateView, DashboardRegisterStaffListView, DashboardRejectOrganizationVerification, DashboardVerifyOrganization, DashboardVerifyOrganizationList
 
 app_name = "dashboard"
 
 urlpatterns = [
     path("", DashboardIndexView.as_view(), name="index"),
 
-     # Verify Organization
-     path("verify-organizations/", DashboardVerifyOrganizationList.as_view(), name="verify_organization_list"), 
-     path("verify-organization/<int:pk>-verify/", DashboardVerifyOrganization.as_view(), name="verify_organization"), 
-     path("verify-organization/<int:pk>-reject/", DashboardRejectOrganizationVerification.as_view(), name="reject_organization_verify"), 
+    # Verify Organization
+    path("verify-organizations/", DashboardVerifyOrganizationList.as_view(),
+         name="verify_organization_list"),
+    path("verify-organization/<int:pk>-verify/",
+         DashboardVerifyOrganization.as_view(), name="verify_organization"),
+    path("verify-organization/<int:pk>-reject/",
+         DashboardRejectOrganizationVerification.as_view(), name="reject_organization_verify"),
+
+    # Staff Registration
+    path("register-staff/create/", DashboardRegisterStaffCreateView.as_view(),
+         name="staff_register_create"),
+    path("register-staffs/", DashboardRegisterStaffListView.as_view(),
+         name="staff_register_list"),
 
     # Jobs
     path("jobs/", DashboardJobListView.as_view(), name="jobs_list"),
