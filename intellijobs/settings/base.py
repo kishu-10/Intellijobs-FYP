@@ -172,7 +172,7 @@ TINYMCE_DEFAULT_CONFIG = {
     'cleanup_on_startup': True,
     'selector': 'textarea',
     'theme': 'silver',
-    'content_style': 'body {font-size: 13px;}',
+    'content_style': '@import url(https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap);' 'body {font-size: 13px; font-family: "Rubik", sans-serif;}',
     'plugins': '''
             textcolor save link image media preview codesample contextmenu
             table code lists fullscreen  insertdatetime  nonbreaking
