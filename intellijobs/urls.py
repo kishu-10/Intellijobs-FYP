@@ -31,9 +31,9 @@ urlpatterns = [
          name='token_obtain_pair'),
     path('api/token/refresh/',
          jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
-
     # URLs for apps
-    path('dashboard/', include('dashboard.urls'))
+    path('dashboard/', include('dashboard.urls')),
+    path('api/jobs/', include('jobs.urls') ),
 
 ]
 
