@@ -43,7 +43,8 @@ class JobCategorySerializer(serializers.ModelSerializer):
 
 class JobSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
-
+    date_created = serializers.SerializerMethodField()
+    job_address = serializers.SerializerMethodField()
     class Meta:
         model = Job
         fields = [
@@ -53,14 +54,30 @@ class JobSerializer(serializers.ModelSerializer):
             'employment_type',
             'experienced_required',
             'deadline',
-            'category'
+            'category',
+            'date_created',
+            'job_address',
+            'job_level'
         ]
+    
+    def get_date_created(self, obj):
+        return obj.date_created.strftime("%b %d, %Y")
 
+    def get_job_address(self, obj):
+        if obj.job_address:
+            return obj.job_address
+        elif obj.organization.city:
+            return obj.organization.city
+        elif obj.organization.area:
+            return obj.organization.area
 
 class JobDetailSerializer(serializers.ModelSerializer):
     """Serializer class that returns all the details of a Job"""
     category = CategorySerializer()
-
+    organization = serializers.SerializerMethodField()
     class Meta:
         model = Job
         fields = "__all__"
+
+    def get_organization(self, obj):
+        return obj.organization.name

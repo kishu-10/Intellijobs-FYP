@@ -115,17 +115,16 @@ class DashboardJobDeleteView(View):
 class JobListView(ListAPIView):
     serializer_class = JobSerializer
     queryset = Job.objects.filter(
-        is_active=True, deadline__gte=date.today()).order_by('-id')
+        is_active=True, deadline__gte=date.today()).order_by('-date_created')
 
     def get_queryset(self):
         category = self.request.query_params.get('category', None)
-        print(category)
         if category:
             queryset = Job.objects.filter(
-                is_active=True, category=category, deadline__gte=date.today()).order_by('-created_at')
+                is_active=True, category=category, deadline__gte=date.today()).order_by('-date_created')
         else:
             queryset = Job.objects.filter(
-                is_active=True, deadline__gte=date.today()).order_by('-created_at')
+                is_active=True, deadline__gte=date.today()).order_by('-date_created')
 
         return queryset
 
@@ -150,7 +149,7 @@ class JobDetailView(APIView):
                             status=status.HTTP_400_BAD_REQUEST
                             )
         serializer = JobDetailSerializer(job, context={'request': request})
-        return Response({'job_detail': serializer.data})
+        return Response(serializer.data)
 
 
 class CategoryCreateView(APIView):
