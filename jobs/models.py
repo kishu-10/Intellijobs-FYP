@@ -1,7 +1,7 @@
 from django.db import models
 
 from users.abstract import DateTimeEntity
-from users.models import OrganizationProfile
+from users.models import CandidateCV, OrganizationProfile, UserProfile
 
 # Create your models here.
 
@@ -56,3 +56,35 @@ class Job(JobAbstractModel):
 
     def __str__(self):
         return self.title
+
+
+class JobApplication(DateTimeEntity):
+    candidate = models.ForeignKey(
+        UserProfile, on_delete=models.CASCADE, related_name='applied_jobs')
+    job = models.ForeignKey(Job, on_delete=models.CASCADE,
+                            related_name='applications')
+    cv = models.ForeignKey(
+        CandidateCV, on_delete=models.CASCADE, related_name='applied_cv')
+
+    def __str__(self):
+        return self.candidate.get_full_name()
+
+
+class JobWishlist(models.Model):
+    owner = models.ForeignKey(
+        UserProfile, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return (str(self.owner) + ' wishlist')
+
+
+class JobWishlistDetail(DateTimeEntity):
+    wishlist = models.ForeignKey(
+        JobWishlist, on_delete=models.SET_NULL, blank=True, null=True, related_name='wishlist_detail')
+    job = models.ForeignKey(
+        Job, on_delete=models.CASCADE, blank=True, null=True, related_name='wishlist_job')
+    # is_active -> opposite of is_archive -> for deletion
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return str(self.job)
