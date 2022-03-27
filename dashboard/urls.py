@@ -1,5 +1,5 @@
 from django.urls import path
-from jobs.views import (DashboardJobCategoryCreateView,
+from jobs.views import (DashboardCandidateJobApplicationListView, DashboardJobCategoryCreateView,
                         DashboardJobCategoryDeleteView,
                         DashboardJobCategoryListView,
                         DashboardJobCategoryUpdateView, DashboardJobCreateView,
@@ -38,6 +38,8 @@ urlpatterns = [
          DashboardJobUpdateView.as_view(), name="jobs_update"),
     path("jobs/<int:pk>-delete/",
          DashboardJobDeleteView.as_view(), name="jobs_delete"),
+    path("jobs/<int:pk>-detail/",
+         DashboardCandidateJobApplicationListView.as_view(), name="applied_candidates"),
 
     # Job Category
     path("jobs/job-categories/",

@@ -42,9 +42,11 @@ class JobCategorySerializer(serializers.ModelSerializer):
 
 
 class JobSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(read_only=True)
     date_created = serializers.SerializerMethodField()
     job_address = serializers.SerializerMethodField()
+    organization = serializers.SerializerMethodField()
+    organization_picture = serializers.SerializerMethodField()
+
     class Meta:
         model = Job
         fields = [
@@ -54,30 +56,52 @@ class JobSerializer(serializers.ModelSerializer):
             'employment_type',
             'experienced_required',
             'deadline',
-            'category',
             'date_created',
             'job_address',
-            'job_level'
+            'job_level',
+            'organization',
+            'organization_picture'
         ]
-    
+
     def get_date_created(self, obj):
         return obj.date_created.strftime("%b %d, %Y")
 
     def get_job_address(self, obj):
         if obj.job_address:
             return obj.job_address
-        elif obj.organization.city:
-            return obj.organization.city
         elif obj.organization.area:
             return obj.organization.area
+        elif obj.organization.city:
+            return obj.organization.city
+
+    def get_organization(self, obj):
+        return obj.organization.name
+
+    def get_organization_picture(self, obj):
+        request = self.context.get('request')
+        if obj.organization.display_picture:
+            return request.build_absolute_uri(obj.organization.display_picture.url)
+        else:
+            return None
+
 
 class JobDetailSerializer(serializers.ModelSerializer):
     """Serializer class that returns all the details of a Job"""
     category = CategorySerializer()
+    job_address = serializers.SerializerMethodField()
     organization = serializers.SerializerMethodField()
+
     class Meta:
         model = Job
         fields = "__all__"
 
     def get_organization(self, obj):
         return obj.organization.name
+
+    def get_job_address(self, obj):
+        if obj.job_address:
+            return obj.job_address
+        elif obj.organization.area:
+            return obj.organization.area
+        elif obj.organization.city:
+            return obj.organization.city

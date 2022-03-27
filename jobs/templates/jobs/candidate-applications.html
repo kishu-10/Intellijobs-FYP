@@ -1,0 +1,65 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block main_content %}
+<div class="container">
+  <div class="page-header">
+    <h2 class="mb-0">Applied Candidates</h2>
+    <a class="btn btn-sm btn-info btn-icon" href="{% url 'dashboard:jobs_list' %}">
+      <span class="ic-arrow-left"></span>Back to Jobs
+    </a>
+  </div>
+  <div class="card section-spacer">
+    <div class="card-body">
+      <div class="row mt-2">
+        <div class="col-lg-12 pl-4 pr-4">
+            <div class="form-row mt-lg-0 mt-3 card--white">
+              <div class="accordion col-lg" id="profileDetails">
+                <div class="card--white">
+                  <div data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+                    aria-controls="collapseOne">
+                    <span class="font-16 font-weight-bold">Profile Details</span>
+                    <i class="ic-chevron-down accordion-drop-icon"></i>
+                  </div>
+                  <div id="collapseOne" aria-labelledby="faqTwo" data-parent="#profileDetails">
+                    <div class="accordion-card-body font-14">
+                      <div class="organization-details">
+                        <div class="item">
+                          <h6>Mobile Number</h6>
+                          <p>{{organization.mobile_number}}</p>
+                        </div>
+                        <div class="item">
+                          <h6>Phone Number</h6>
+                          <p>{{organization.phone_number}}</p>
+                        </div>
+                        <div class="item">
+                          <h6>Verification Status</h6>
+                          <p>{% if organization.verification_status == "Verified" %}
+                            <span class="badge badge-success">Verified</span>
+                            {% elif organization.verification_status == "Pending" %}
+                            <span class="badge badge-muted">Pending</span>
+                            {% else %}
+                            <span class="badge badge-danger">Rejected</span>
+                            {% endif %}</p>
+                        </div>
+                        <div class="item">
+                          <h6>Verified By</h6>
+                          <p>{{organization.verified_by}}</p>
+                        </div>
+                      </div>
+                      <div class="item desc">
+                        <h6>Description</h6>
+                        <p>{{organization.description}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="section-footer mt-5">
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock main_content %}

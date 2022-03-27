@@ -7,7 +7,7 @@ from rest_framework.generics import ListAPIView
 from jobs.forms import CategoryForm, JobForm
 from jobs.serializers import *
 from rest_framework import status
-from django.views.generic import CreateView, ListView, UpdateView, View
+from django.views.generic import CreateView, ListView, UpdateView, View, DetailView
 from django.contrib import messages
 
 
@@ -59,6 +59,7 @@ class DashboardJobCategoryDeleteView(View):
 
 # TODO: check CRUD and validation
 
+
 class DashboardJobCreateView(CreateView):
     model = Job
     form_class = JobForm
@@ -68,11 +69,10 @@ class DashboardJobCreateView(CreateView):
     def form_valid(self, form):
         title = form.cleaned_data.get('title')
         instance = form.save(commit=False)
-        instance.orgaization = self.request.user.org_profile
+        instance.organization = self.request.user.org_profile
         instance.save()
         messages.success(
             self.request, f"{title} created successfully.")
-        super().form_valid(form)
         return HttpResponseRedirect(self.success_url)
 
 
@@ -112,10 +112,27 @@ class DashboardJobDeleteView(View):
         return HttpResponseRedirect(self.success_url)
 
 
+class DashboardCandidateJobApplicationListView(DetailView):
+    model = Job
+    context_object_name = "job"
+    template_name = "jobs/candidate-applications.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['candidates'] = JobApplication.objects.filter(job=self.object)
+        return context
+
+
+# API
 class JobListView(ListAPIView):
     serializer_class = JobSerializer
     queryset = Job.objects.filter(
         is_active=True, deadline__gte=date.today()).order_by('-date_created')
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({"request": self.request})
+        return context
 
     def get_queryset(self):
         category = self.request.query_params.get('category', None)
