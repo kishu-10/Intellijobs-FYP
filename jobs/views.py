@@ -129,6 +129,11 @@ class JobListView(ListAPIView):
     queryset = Job.objects.filter(
         is_active=True, deadline__gte=date.today()).order_by('-date_created')
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({"request": self.request})
+        return context
+
     def get_queryset(self):
         category = self.request.query_params.get('category', None)
         if category:
