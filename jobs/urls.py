@@ -4,9 +4,11 @@ from django.urls.conf import path
 
 from jobs.views import *
 
+app_name = "jobs"
+
 urlpatterns = [
-    path('jobs/', JobListView.as_view(), name='job-list'),
-    path('job/detail/<int:pk>/', JobDetailView.as_view(), name='job-detail'),
+    path('', JobListView.as_view(), name='job-list'),
+    path('detail/<int:pk>/', JobDetailView.as_view(), name='job-detail'),
     path('categories/', CategoriesListView.as_view(), name='job-category'),
     path('category/create/',CategoryCreateView.as_view(),name='job-category-create'),
   
