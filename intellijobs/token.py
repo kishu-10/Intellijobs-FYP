@@ -7,16 +7,26 @@ User = get_user_model()
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
+        request = self.context.get('request')
         data = super().validate(attrs)
+        user = dict()
         try:
-            data['username'] = self.user.username
-            data['email'] = self.user.email
-            data["user_type"] = self.user.user_type
-            data["verified_email"] = self.user.is_email_verified
+            user['id'] = self.user.id
+            user['username'] = self.user.username
+            user['email'] = self.user.email
+            user["user_type"] = self.user.user_type
+            user["verified_email"] = self.user.is_email_verified
             if self.user.user_type == "Candidate":
-                data['name'] = self.user.user_profile.get_full_name()
+                user['name'] = self.user.user_profile.get_full_name()
             else:
-                data['name'] = self.user.org_profile.name
+                user['name'] = self.user.org_profile.name
+            if self.user.user_type == "Candidate":
+                if self.user.user_profile.display_picture:
+                    user['picture'] = request.build_absolute_uri(self.user.user_profile.display_picture.url) 
+            else:
+                if self.user.org_profile.display_picture:
+                    user['picture'] = request.build_absolute_uri(self.user.org_profile.display_picture.url) 
+            data['user'] = user 
         except User.DoesNotExist:
             pass
         return data
@@ -24,3 +34,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update({"request": self.request})
+        return context
