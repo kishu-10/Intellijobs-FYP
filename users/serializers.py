@@ -69,7 +69,7 @@ class UserGetSerializer(serializers.ModelSerializer):
 
     def get_picture(self, obj):
         request = self.context.get('request')
-        if obj.user_profile and obj.user_profile.display_picture:
+        if obj.user_type == "Candidate" and obj.user_profile and obj.user_profile.display_picture:
             return request.build_absolute_uri(obj.user_profile.display_picture.url)
         elif obj.user_type == "Organization" and obj.org_profile.display_picture:
             return request.build_absolute_uri(obj.org_profile.display_picture.url)
