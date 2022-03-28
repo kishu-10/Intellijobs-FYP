@@ -51,7 +51,27 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserGetSerializer(serializers.ModelSerializer):
     """ Serializer to get details of user """
+    name = serializers.SerializerMethodField()
+    picture = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ["id", "username", "first_name", "last_name",
-                  "email", "password", "user_type"]
+        fields = ["id", "username", "name",
+                  "email", "user_type", "picture"]
+
+    def get_name(self, obj):
+        if obj.user_type == "Candidate":
+            return obj.user_profile.get_full_name()
+        elif obj.user_type == "Organization":
+            return obj.org_profile.name
+        else:
+            return obj.email
+
+    def get_picture(self, obj):
+        request = self.context.get('request')
+        if obj.user_profile and obj.user_profile.display_picture:
+            return request.build_absolute_uri(obj.user_profile.display_picture.url)
+        elif obj.user_type == "Organization" and obj.org_profile.display_picture:
+            return request.build_absolute_uri(obj.org_profile.display_picture.url)
+        else:
+            return None

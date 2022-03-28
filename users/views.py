@@ -46,3 +46,11 @@ class CreateUserView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetUserDetailsView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        user = User.objects.get(id=self.kwargs.get('pk'))
+        serializer = UserGetSerializer(user, context={'request': self.request})
+        return Response(serializer.data)

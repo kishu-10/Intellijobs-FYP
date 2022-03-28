@@ -34,6 +34,7 @@ urlpatterns = [
     # URLs for apps
     path('dashboard/', include('dashboard.urls')),
     path('api/jobs/', include('jobs.urls') ),
+    path('api/users/', include('users.urls') ),
 
 ]
 
