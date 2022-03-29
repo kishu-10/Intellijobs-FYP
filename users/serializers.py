@@ -7,7 +7,7 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.sites.shortcuts import get_current_site
-
+from .models import UserProfile
 
 User = get_user_model()
 account_activation_token = PasswordResetTokenGenerator()
@@ -75,3 +75,29 @@ class UserGetSerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(obj.org_profile.display_picture.url)
         else:
             return None
+
+
+class GetUserProfileSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+    email = serializers.SerializerMethodField()
+    dob = serializers.SerializerMethodField()
+    display_picture = serializers.SerializerMethodField()
+    class Meta:
+        model = UserProfile
+        fields = "__all__"
+    
+    def get_name(self, obj):
+        return obj.get_full_name()
+
+    def get_email(self, obj):
+        return obj.user.email
+    
+    def get_dob(self, obj):
+        return obj.dob.strftime("%b %d, %Y")
+
+
+    def get_display_picture(self, obj):
+        request = self.context.get('request')
+        if obj.display_picture:
+            return request.build_absolute_uri(obj.display_picture.url)
+        return None

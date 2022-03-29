@@ -1,3 +1,4 @@
+from functools import partial
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -54,3 +55,15 @@ class GetUserDetailsView(APIView):
         user = User.objects.get(id=self.kwargs.get('pk'))
         serializer = UserGetSerializer(user, context={'request': self.request})
         return Response(serializer.data)
+
+
+class GetUserProfileDetailsView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        user = User.objects.get(id=self.kwargs.get('pk'))
+        if user.user_type == "Candidate":
+            profile = UserProfile.objects.get(user=user)
+            serializer = GetUserProfileSerializer(
+                profile, context={'request': self.request})
+            return Response(serializer.data)
+        return Response([])
