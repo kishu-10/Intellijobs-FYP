@@ -7,6 +7,8 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.sites.shortcuts import get_current_site
+
+from users.abstract import District, Province
 from .models import UserProfile
 
 User = get_user_model()
@@ -82,22 +84,49 @@ class GetUserProfileSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
     dob = serializers.SerializerMethodField()
     display_picture = serializers.SerializerMethodField()
+
     class Meta:
         model = UserProfile
         fields = "__all__"
-    
+
     def get_name(self, obj):
         return obj.get_full_name()
 
     def get_email(self, obj):
         return obj.user.email
-    
+
     def get_dob(self, obj):
         return obj.dob.strftime("%b %d, %Y")
-
 
     def get_display_picture(self, obj):
         request = self.context.get('request')
         if obj.display_picture:
             return request.build_absolute_uri(obj.display_picture.url)
         return None
+
+
+class ProvinceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Province
+        fields = "__all__"
+
+
+class DistrictSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = District
+        fields = "__all__"
+
+
+class UpdateUserAddressGetSerializer(serializers.ModelSerializer):
+    province = ProvinceSerializer(read_only=True)
+    district = DistrictSerializer(read_only=True)
+
+    class Meta:
+        model = UserProfile
+        fields = ["id", "province", "district", "area", "city", "description"]
+
+
+class UpdateUserAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ["province", "district", "area", "city", "description"]
