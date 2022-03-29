@@ -7,5 +7,8 @@ app_name = "users"
 urlpatterns = [
     path('verify-email/<uidb64>/<token>/', VerifyEmail.as_view(), name="verify_email"),
     path('detail-<int:pk>/', GetUserDetailsView.as_view(), name="user_details"),
-    path('profile-<int:pk>/', GetUserProfileDetailsView.as_view(), name="profile_details")
+    path('profile-<int:pk>/', GetUserProfileDetailsView.as_view(), name="profile_details"),
+    path('profile/address/update-<int:pk>/', UpdateUserAddressView.as_view(), name="update_profile_address"),
+    path('provinces/', GetProvinceListView.as_view(), name="provinces"),
+    path('districts/', GetDistrictListView.as_view(), name="districts"),
 ]
