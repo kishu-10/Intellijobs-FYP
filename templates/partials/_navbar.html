@@ -6,33 +6,20 @@
       </div>
       <ul class="list list-inline nav-list">
         <li class="nav-item expandSearch toggleSearch">
-          <a class="nav-link btn btn-icon-only" href="javascript:void(0)"
-            ><i class="ic-search" type="button"></i
-          ></a>
+          <a class="nav-link btn btn-icon-only" href="javascript:void(0)"><i class="ic-search" type="button"></i></a>
         </li>
         <li class="nav-item collapseSearch toggleSearch d-md-none">
           <a class="nav-link btn btn-icon-only" href="javascript:void(0)">
-            <i class="ic-close" type="button"></i
-          ></a>
+            <i class="ic-close" type="button"></i></a>
         </li>
         <li class="nav-item list-separator">
-          <a class="nav-link text-white" href="#">Visit Store</a>
+          <a class="nav-link text-white" onclick="visitSite()" href="#">Visit Site</a>
         </li>
         <li class="nav-item dropdown-notification">
-          <a
-            class="nav-link btn btn-icon-only dropdown-toggle"
-            href="javascript:void(0)"
-            id="notificationDrop"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-            ><i class="ic-notification-filled"></i
-            ><small class="notification badge-count">2</small></a
-          >
-          <div
-            class="dropdown-menu dropdown-menu-right"
-            aria-labelledby="notificationDrop"
-          >
+          <a class="nav-link btn btn-icon-only dropdown-toggle" href="javascript:void(0)" id="notificationDrop"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
+              class="ic-notification-filled"></i><small class="notification badge-count">2</small></a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDrop">
             <div class="heading">
               <p class="font-weight-semiBold">Notifications</p>
               <a class="text-info" href="#">See All</a>
@@ -47,8 +34,8 @@
                 </a>
               </li>
               <li class="dropdown-item">
-                <a href=""
-                  ><p>No new notifications</p>
+                <a href="">
+                  <p>No new notifications</p>
                   <ul class="list list-inline list-dot">
                     <li></li>
                   </ul>
@@ -59,23 +46,13 @@
         </li>
         <li class="nav-item">
           <div class="dropdown">
-            <a
-              class="nav-link avatar dropdown-toggle"
-              href="javascript:void(0)"
-              id="profileDrop"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
+            <a class="nav-link avatar dropdown-toggle" href="javascript:void(0)" id="profileDrop" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
               <img
                 src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;w=1000&amp;q=80"
-                alt="Avatar"
-              />
+                alt="Avatar" />
             </a>
-            <div
-              class="dropdown-menu dropdown-menu-right"
-              aria-labelledby="profileDrop"
-            >
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDrop">
               <div class="dropdown-item">
                 <h4 class="mb-0">Kishu Maharjan</h4>
                 <p class="text-muted mb-0">mhrznkishu.10@gmail.com</p>
@@ -90,3 +67,9 @@
     </div>
   </div>
 </header>
+
+<script>
+  const visitSite = () => {
+    window.location.replace('http://localhost:3000/feeds')
+  }
+</script>
