@@ -11,4 +11,5 @@ urlpatterns = [
     path('profile/address/update-<int:pk>/', UpdateUserAddressView.as_view(), name="update_profile_address"),
     path('provinces/', GetProvinceListView.as_view(), name="provinces"),
     path('districts/', GetDistrictListView.as_view(), name="districts"),
+    path('profile/update-<int:pk>/', UpdateUserProfileView.as_view(), name="update_profile"),
 ]
