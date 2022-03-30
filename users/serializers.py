@@ -123,10 +123,23 @@ class UpdateUserAddressSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ["id", "province", "district", "area", "city", "description"]
 
-
     def validate(self, attrs):
         district = attrs.get('district')
         province = attrs.get('province')
         if district.province != province:
-            raise serializers.ValidationError({"message": "Selected Province and District does not match."})
+            raise serializers.ValidationError(
+                {"message": "Selected Province and District does not match."})
         return super().validate(attrs)
+
+
+class UpdateUserProfileSerializer(serializers.ModelSerializer):
+    email = serializers.SerializerMethodField()
+
+    class Meta:
+        model = UserProfile
+        fields = ["id", "first_name", "middle_name", "last_name",
+                  "email", "mobile_number", "dob", "gender"]
+
+    def get_email(self, obj):
+        return obj.user.email
+

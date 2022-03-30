@@ -92,8 +92,33 @@ class UpdateUserAddressView(APIView):
     def post(self, request, *args, **kwargs):
         user = User.objects.get(id=self.kwargs.get('pk'))
         profile = UserProfile.objects.get(user=user)
-        serializer = UpdateUserAddressSerializer(profile, data=request.data, partial=True)
+        serializer = UpdateUserAddressSerializer(
+            profile, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UpdateUserProfileView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        user = User.objects.get(id=self.kwargs.get('pk'))
+        if user.user_type == "Candidate":
+            profile = UserProfile.objects.get(user=user)
+            serializer = UpdateUserProfileSerializer(profile)
+            return Response(serializer.data)
+        return Response([])
+
+    def post(self, request, *args, **kwargs):
+        user = User.objects.get(id=self.kwargs.get('pk'))
+        profile = UserProfile.objects.get(user=user)
+        serializer = UpdateUserProfileSerializer(
+            profile, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            if user.email != request.data.get('email'):
+                user.email = request.data.get('email')
+                user.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
