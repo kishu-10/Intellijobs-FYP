@@ -1,3 +1,4 @@
+from email import message
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from intellijobs.tasks import send_email_verfication
@@ -117,16 +118,15 @@ class DistrictSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class UpdateUserAddressGetSerializer(serializers.ModelSerializer):
-    province = ProvinceSerializer(read_only=True)
-    district = DistrictSerializer(read_only=True)
-
+class UpdateUserAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ["id", "province", "district", "area", "city", "description"]
 
 
-class UpdateUserAddressSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = ["province", "district", "area", "city", "description"]
+    def validate(self, attrs):
+        district = attrs.get('district')
+        province = attrs.get('province')
+        if district.province != province:
+            raise serializers.ValidationError({"message": "Selected Province and District does not match."})
+        return super().validate(attrs)
