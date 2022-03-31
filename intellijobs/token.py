@@ -1,6 +1,6 @@
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from django.contrib.auth import get_user_model, authenticate, login
+from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
@@ -20,11 +20,11 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             user['email'] = self.user.email
             user["user_type"] = self.user.user_type
             user["verified_email"] = self.user.is_email_verified
-            if self.user.user_type == "Candidate":
+            if self.user.user_type == "Candidate" or self.user.user_type == "Staff":
                 user['name'] = self.user.user_profile.get_full_name()
             else:
                 user['name'] = self.user.org_profile.name
-            if self.user.user_type == "Candidate":
+            if self.user.user_type == "Candidate" or self.user.user_type == "Staff":
                 if self.user.user_profile.display_picture:
                     user['picture'] = request.build_absolute_uri(
                         self.user.user_profile.display_picture.url)

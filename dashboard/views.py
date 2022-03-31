@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, TemplateView, View, UpdateView
+from dashboard.mixins import DashboardUserMixin
 from intellijobs.tasks import send_email_verfication
 from users.models import OrganizationDocuments, OrganizationProfile
 from .forms import *
@@ -13,7 +14,7 @@ User = get_user_model()
 
 
 # Create your views here
-class DashboardIndexView(TemplateView):
+class DashboardIndexView(DashboardUserMixin, TemplateView):
     template_name = "index.html"
 
 
