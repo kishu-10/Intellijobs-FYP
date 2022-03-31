@@ -1,12 +1,16 @@
+from django.shortcuts import get_object_or_404, redirect
+from django.views import View
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from users.models import UserProfile
+from users.forms import OrganizationProfileForm, UserProfileForm
+from users.models import OrganizationProfile, UserProfile
 from .serializers import *
 from rest_framework.generics import ListAPIView
+
 
 User = get_user_model()
 account_activation_token = PasswordResetTokenGenerator()
@@ -41,6 +45,34 @@ class CreateUserView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CreateUserProfile(View):
+    # TODO: urls, template, testing
+    model = UserProfile
+    form_class = UserProfileForm
+    template_name = "user-profile/user-profile-create.html"
+
+    def post(self, request, *args, **kwargs):
+        profile = self.form_class.save(commit=False)
+        user = get_object_or_404(User, user_uuid=self.kwargs.get('uuid'))
+        profile.user = user
+        profile.save()
+        return redirect()
+
+
+class CreateOrganizationProfile(View):
+    # TODO: urls, template, testing
+    model = OrganizationProfile
+    form_class = OrganizationProfileForm
+    template_name = "org-profile/org-profile-create.html"
+
+    def post(self, request, *args, **kwargs):
+        profile = self.form_class.save(commit=False)
+        user = get_object_or_404(User, user_uuid=self.kwargs.get('uuid'))
+        profile.user = user
+        profile.save()
+        return redirect()
 
 
 class GetUserDetailsView(APIView):
@@ -116,4 +148,3 @@ class UpdateUserProfileView(APIView):
                 user.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-

@@ -102,7 +102,7 @@ class OrganizationProfile(AddressEntity):
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     display_picture = models.ImageField(
         upload_to=dp_path, null=True, blank=True)
-    description = models.TextField()
+    org_description = models.TextField(null=True, blank=False)
     verification_status = models.CharField(
         max_length=100, choices=VERIFICATION_STATUS, default="Pending")
     verified_by = models.ForeignKey(
