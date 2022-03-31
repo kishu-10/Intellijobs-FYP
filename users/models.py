@@ -37,7 +37,7 @@ class AuthUser(AbstractUser):
             access = True
         elif self.user_type == "Staff":
             access = True
-        elif self.user_type == "Organization" and self.user.org_profile.verification_status == "Verified":
+        elif self.user_type == "Organization" and self.org_profile.verification_status == "Verified":
             access = True
         return access
 

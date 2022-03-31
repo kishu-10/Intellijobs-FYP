@@ -11,6 +11,8 @@ class RestrictUserMiddleware(object):
         # restrict dashboard to normal users
 
         if request.path.find("/dashboard/") > -1:
+            if request.user.is_anonymous:
+                raise Http404('No Access to the page')
             if not request.user.is_superuser and not request.user.has_dashboard_access:
                 raise Http404('No Access to the page')
         response = self.get_response(request)

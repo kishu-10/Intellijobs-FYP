@@ -6,12 +6,14 @@ from jobs.views import (DashboardCandidateJobApplicationListView, DashboardJobCa
                         DashboardJobDeleteView, DashboardJobListView,
                         DashboardJobUpdateView)
 
-from dashboard.views import DashboardIndexView, DashboardRegisterStaffCreateView, DashboardRegisterStaffDeleteView, DashboardRegisterStaffListView, DashboardRegisterStaffUpdateView, DashboardRejectOrganizationVerification, DashboardVerifyOrganization, DashboardVerifyOrganizationList
+from dashboard.views import *
 
 app_name = "dashboard"
 
 urlpatterns = [
     path("", DashboardIndexView.as_view(), name="index"),
+    path('login/<slug:uuid>/', UserLoginDashboardView.as_view(), name="login"),
+    path('logout/', UserLogoutView.as_view(), name="logout"),
 
     # Verify Organization
     path("verify-organizations/", DashboardVerifyOrganizationList.as_view(),
