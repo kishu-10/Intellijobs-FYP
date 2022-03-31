@@ -1,13 +1,12 @@
 from django.contrib import messages
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, login, logout
+from django.http import HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, TemplateView, View, UpdateView
 from intellijobs.tasks import send_email_verfication
-from users.models import (OrganizationDocuments, OrganizationProfile,
-                          UserProfile)
-
+from users.models import OrganizationDocuments, OrganizationProfile
 from .forms import *
 
 User = get_user_model()
@@ -137,3 +136,24 @@ class DashboardRegisterStaffDeleteView(View):
         messages.success(
             self.request, f"{staff.username} deleted successfully.")
         return redirect("dashboard:staff_register_list")
+
+
+class UserLoginDashboardView(View):
+
+    def get(self, request, *args, **kwargs):
+        try:
+            user = User.objects.get(user_uuid=self.kwargs.get('uuid'))
+            if user.is_superuser or user.has_dashboard_access:
+                login(self.request, user)
+                return redirect('dashboard:index')
+            else:
+                return HttpResponseBadRequest()
+        except Exception:
+            return HttpResponseBadRequest()
+
+
+class UserLogoutView(View):
+
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return HttpResponseBadRequest()
