@@ -17,7 +17,7 @@ account_activation_token = PasswordResetTokenGenerator()
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """ User Serializer for CRUD """
+    """ To register a new user """
 
     class Meta:
         model = User
@@ -30,7 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         # send email to candidate and organization for email verification
         subject = "Email Verification - Intellijobs"
-        message = render_to_string('email_verification.html', {
+        message = render_to_string('email-templates/email-verification.html', {
             'user': user,
             'domain': get_current_site(self.request),
             'uid': urlsafe_base64_encode(force_bytes(user.pk)),
@@ -42,14 +42,6 @@ class UserSerializer(serializers.ModelSerializer):
             subject, message, validated_data.get('email'))
 
         return user
-
-    def update(self, instance, validated_data):
-        instance = User.objects.get(pk=validated_data.get('id'))
-        instance.update(**validated_data)
-        if not instance.check_password(validated_data.get('password')):
-            instance.set_password(validated_data.get('password'))
-        instance.save()
-        return instance
 
 
 class UserGetSerializer(serializers.ModelSerializer):

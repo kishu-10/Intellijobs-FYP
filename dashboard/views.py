@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login, logout
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
@@ -157,4 +157,4 @@ class UserLogoutView(View):
 
     def get(self, request, *args, **kwargs):
         logout(request)
-        return HttpResponseBadRequest()
+        return HttpResponseRedirect("http://localhost:3000")

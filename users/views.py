@@ -37,12 +37,7 @@ class CreateUserView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            user_obj = serializer.save()
-
-            # create trainer profile for the instance user
-            # profile = UserProfile.objects.create(user=user_obj)
-            # profile.save()
-
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
