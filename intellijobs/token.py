@@ -1,6 +1,6 @@
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate, login
 
 User = get_user_model()
 
@@ -9,9 +9,13 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         request = self.context.get('request')
         data = super().validate(attrs)
+        refresh = self.get_token(self.user)
         user = dict()
         try:
+            data['refresh'] = str(refresh)
+            data['access'] = str(refresh.access_token)
             user['id'] = self.user.id
+            user['uuid'] = self.user.user_uuid
             user['username'] = self.user.username
             user['email'] = self.user.email
             user["user_type"] = self.user.user_type
@@ -22,11 +26,13 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
                 user['name'] = self.user.org_profile.name
             if self.user.user_type == "Candidate":
                 if self.user.user_profile.display_picture:
-                    user['picture'] = request.build_absolute_uri(self.user.user_profile.display_picture.url) 
+                    user['picture'] = request.build_absolute_uri(
+                        self.user.user_profile.display_picture.url)
             else:
                 if self.user.org_profile.display_picture:
-                    user['picture'] = request.build_absolute_uri(self.user.org_profile.display_picture.url) 
-            data['user'] = user 
+                    user['picture'] = request.build_absolute_uri(
+                        self.user.org_profile.display_picture.url)
+            data['user'] = user
         except User.DoesNotExist:
             pass
         return data

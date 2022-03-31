@@ -12,4 +12,5 @@ urlpatterns = [
     path('provinces/', GetProvinceListView.as_view(), name="provinces"),
     path('districts/', GetDistrictListView.as_view(), name="districts"),
     path('profile/update-<int:pk>/', UpdateUserProfileView.as_view(), name="update_profile"),
+    path('logout/', logout_view, name="logout"),
 ]
