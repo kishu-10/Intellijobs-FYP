@@ -6,11 +6,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Staff Credentials</title>
+  <title>Email Verification</title>
 </head>
 
 <body>
-  <table width="600" style="
+  <table width="680" style="
         font-family: Arial, Helvetica, sans-serif;
         font-size: .925rem;
         color: rgb(51, 51, 51);
@@ -24,8 +24,10 @@
     <tr>
       <td style="padding: 0 48px">
         <div style="line-height: 1.375rem">
-          An account has been activated with following credentials for the
-          access of IntelliJobs Dashboard.
+          <strong>Hi {{ user.email }},</strong>
+        </div>
+        <div style="line-height: 1.375rem">
+          Thankyou for registering in IntelliJobs.
         </div>
       </td>
     </tr>
@@ -42,7 +44,7 @@
           <tr>
             <td>
               <div style="font-weight: 600; margin-bottom: 1rem">
-                Login Credentials
+                Registered Details:
               </div>
             </td>
           </tr>
@@ -54,7 +56,7 @@
                 </tr>
                 <tr>
                   <td style="font-weight: 600; padding-bottom: 1rem">
-                    {{ email }}
+                    {{ user.email }}
                   </td>
                 </tr>
               </table>
@@ -67,20 +69,7 @@
                 </tr>
                 <tr>
                   <td style="font-weight: 600; padding-bottom: 1.5rem">
-                    {{ username }}
-                  </td>
-                </tr>
-              </table>
-            </td>
-
-            <td>
-              <table>
-                <tr>
-                  <td>Password</td>
-                </tr>
-                <tr>
-                  <td style="font-weight: 600; padding-bottom: 1.5rem">
-                    {{ password }}
+                    {{ user.username }}
                   </td>
                 </tr>
               </table>
@@ -88,10 +77,11 @@
           </tr>
           <tr>
             <td>
-              <div style="font-weight: 600; margin-bottom: 1rem; margin-top: .5rem;">
-                Link to Dashboard:
+              <div style="width:100%; font-weight: 600; margin-bottom: 1rem; margin-top: .5rem;">
+                To register further details:
                 <br></br>
-                <a href="{{url}}" style="color: #0d4bc3">{{url}}</a>
+                <a href="{% if request.is_secure %}https{% else %}http{% endif %}://{{domain}}{% url 'users:verify_email' uidb64=uid token=token %}"
+                  style="color: #0d4bc3">Confirm your email</a>
               </div>
             </td>
           </tr>
