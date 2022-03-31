@@ -1,8 +1,8 @@
-from functools import partial
+from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, logout
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from users.models import UserProfile
@@ -41,8 +41,8 @@ class CreateUserView(APIView):
             user_obj = serializer.save()
 
             # create trainer profile for the instance user
-            profile = UserProfile.objects.create(user=user_obj)
-            profile.save()
+            # profile = UserProfile.objects.create(user=user_obj)
+            # profile.save()
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -122,3 +122,8 @@ class UpdateUserProfileView(APIView):
                 user.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def logout_view(request):
+    logout(request)
+    return HttpResponse(status=status.HTTP_200_OK)
