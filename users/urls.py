@@ -12,4 +12,7 @@ urlpatterns = [
     path('provinces/', GetProvinceListView.as_view(), name="provinces"),
     path('districts/', GetDistrictListView.as_view(), name="districts"),
     path('profile/update-<int:pk>/', UpdateUserProfileView.as_view(), name="update_profile"),
+
+    path('user-profile/create/', CreateUserProfile.as_view(), name="user_profile_create"),
+    path('org-profile/create/', CreateOrganizationProfile.as_view(), name="org_profile_create"),
 ]
