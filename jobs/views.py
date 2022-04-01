@@ -127,7 +127,7 @@ class DashboardCandidateJobApplicationListView(DetailView):
 class JobListView(ListAPIView):
     serializer_class = JobSerializer
     queryset = Job.objects.filter(
-        is_active=True, deadline__gte=date.today()).order_by('-date_created')
+        is_active=True).order_by('-date_created')
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -138,10 +138,10 @@ class JobListView(ListAPIView):
         category = self.request.query_params.get('category', None)
         if category:
             queryset = Job.objects.filter(
-                is_active=True, category=category, deadline__gte=date.today()).order_by('-date_created')
+                is_active=True, category=category).order_by('-date_created')
         else:
             queryset = Job.objects.filter(
-                is_active=True, deadline__gte=date.today()).order_by('-date_created')
+                is_active=True).order_by('-date_created')
 
         return queryset
 

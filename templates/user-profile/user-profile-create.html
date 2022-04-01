@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<!DOCTYPE js>
+<html lang="en">
+
+<head>
+    <title>User Profile</title>
+    <link href="{% static 'css/1.style.css' %} " rel="stylesheet" />
+    <link href="{% static 'css/site/style.css' %}" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="auth--container">
+        <div class="row">
+            <div class="col-lg-4 profile-img-col">
+                <img src="{% static 'assets/images/landing-bg.jpg' %}" alt="">
+            </div>
+            <div class="col-lg-8">
+                <div class="profile-form-col">
+                    <div class="auth--wrapper">
+                        <div class="auth--head">
+                            <h3 class="mb-1">User Profile</h3>
+                            <div class="d-flex align-items-center justify-content-between font-14"><span
+                                    class="text-gray-500">Register your further details</span>
+                                <a class="text-info text-underline-hover" href="" id="addressBtn">Add Address</a>
+                                <a class="text-info text-underline-hover d-none" href="" id="backBtn">Back to Info</a>
+                            </div>
+                        </div>
+                        <form method="post">
+                            <div class="auth--form">
+                                <div class="personal-info">
+                                    <div class="form-group">
+                                        <label for="username">First Name</label>
+                                        {{form.first_name}}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password">Middle Name</label>
+                                        {{form.middle_name}}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password">Last Name</label>
+                                        {{form.middle_name}}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password">Mobile Number</label>
+                                        {{form.mobile_number}}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="profile_picture">Profile Picture</label>
+                                        <div class="custom-file">
+                                            <input class="custom-file-input" type="file" name="display_picture" accept="image">
+                                            <label class="custom-file-label"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="gender">Gender</label>
+                                        <div class="row ml-1">
+                                            <div class="form-check col-md">
+                                                <input class="form-check-input" name="gender" type="radio"
+                                                    value="Male" />
+                                                <label class="form-check-label">Male</label>
+                                            </div>
+                                            <div class="form-check col-md">
+                                                <input class="form-check-input" name="gender" type="radio"
+                                                    value="Female" />
+                                                <label class="form-check-label">Female</label>
+                                            </div>
+                                            <div class="form-check col-md">
+                                                <input class="form-check-input" name="gender" type="radio"
+                                                    value="Other" />
+                                                <label class="form-check-label">Other</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="address-info d-none">
+                                    <div class="form-group">
+                                        <label for="username">Province</label>
+                                        {{form.province}}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="username">District</label>
+                                        {{form.district}}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="username">Area</label>
+                                        {{form.area}}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="username">City</label>
+                                        {{form.city}}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="username">Other Description</label>
+                                        <textarea name="description" cols="35" rows="5"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-block btn-primary" type="submit">Register</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'assets/home.js' %} "></script>
+    <script src="{% static 'assets/vendors.js' %} "></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.js"></script>
+    <script>
+        $("#addressBtn").on('click', function (e) {
+            e.preventDefault()
+            $(".personal-info").addClass('d-none')
+            $(".address-info").removeClass('d-none')
+            $(this).addClass('d-none')
+            $("#backBtn").removeClass('d-none')
+        })
+        $("#backBtn").on('click', function (e) {
+            e.preventDefault()
+            $(".personal-info").removeClass('d-none')
+            $(".address-info").addClass('d-none')
+            $(this).addClass('d-none')
+            $("#addressBtn").removeClass('d-none')
+        })
+    </script>
+</body>
+
+</html>

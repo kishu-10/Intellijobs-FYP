@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -53,6 +53,11 @@ class CreateUserProfile(View):
     form_class = UserProfileForm
     template_name = "user-profile/user-profile-create.html"
 
+    def get(self, request, *args, **kwargs):
+        context = {}
+        context['form'] = self.form_class
+        return render(request, self.template_name, context)
+
     def post(self, request, *args, **kwargs):
         profile = self.form_class.save(commit=False)
         user = get_object_or_404(User, user_uuid=self.kwargs.get('uuid'))
@@ -66,6 +71,11 @@ class CreateOrganizationProfile(View):
     model = OrganizationProfile
     form_class = OrganizationProfileForm
     template_name = "org-profile/org-profile-create.html"
+
+    def get(self, request, *args, **kwargs):
+        context = {}
+        context['form'] = self.form_class
+        return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         profile = self.form_class.save(commit=False)
