@@ -1,3 +1,4 @@
+from django.forms import ValidationError
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import get_user_model
@@ -11,6 +12,10 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data = super().validate(attrs)
         refresh = self.get_token(self.user)
         user = dict()
+        if not self.user.is_email_verified:
+            raise ValidationError({'message': 'Please verify your email address.'})
+        if not self.user.has_profile:
+            raise ValidationError({'message': 'Please complete the registration process for your profile.'})
         try:
             data['refresh'] = str(refresh)
             data['access'] = str(refresh.access_token)

@@ -54,6 +54,15 @@
                   <div class="input-group input-action">
                     <a
                       class="btn btn-icon-only action-info"
+                      href="{% url 'dashboard:applied_candidates' job.pk %}"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="View"
+                    >
+                      <i class="ic-notification-filled"></i>
+                    </a>
+                    <a
+                      class="btn btn-icon-only action-info"
                       href="{% url 'dashboard:jobs_update' job.pk %}"
                       data-toggle="tooltip"
                       data-placement="top"

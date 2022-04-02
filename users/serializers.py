@@ -1,4 +1,3 @@
-from email import message
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from intellijobs.tasks import send_email_verfication
@@ -8,7 +7,7 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.sites.shortcuts import get_current_site
-
+from rest_framework.validators import UniqueValidator
 from users.abstract import District, Province
 from .models import UserProfile
 
@@ -22,6 +21,24 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "username", "email", "password", "user_type"]
+        extra_kwargs = {
+            'email': {
+                'validators': [
+                    UniqueValidator(
+                        queryset=User.objects.all(),
+                        message="This email is already taken."
+                    )
+                ]
+            },
+            'username': {
+                'validators': [
+                    UniqueValidator(
+                        queryset=User.objects.all(),
+                        message="This username is already taken."
+                    )
+                ]
+            }
+        }
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -137,4 +154,3 @@ class UpdateUserProfileSerializer(serializers.ModelSerializer):
 
     def get_email(self, obj):
         return obj.user.email
-

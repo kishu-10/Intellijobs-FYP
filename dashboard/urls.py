@@ -44,7 +44,7 @@ urlpatterns = [
          DashboardJobUpdateView.as_view(), name="jobs_update"),
     path("jobs/<int:pk>-delete/",
          DashboardJobDeleteView.as_view(), name="jobs_delete"),
-    path("jobs/<int:pk>-detail/",
+    path("jobs/<int:pk>-candidates/",
          DashboardCandidateJobApplicationListView.as_view(), name="applied_candidates"),
 
     # Job Category

@@ -40,6 +40,16 @@ class AuthUser(AbstractUser):
         elif self.user_type == "Organization" and self.org_profile.verification_status == "Verified":
             access = True
         return access
+    
+    @property
+    def has_profile(self):
+        if self.user_type == "Organization" and OrganizationProfile.objects.filter(user=self).exists():
+            return True
+        elif self.user_type == "Candidate" and UserProfile.objects.filter(user=self).exists():
+            return True
+        elif self.user_type == "Staff" or self.is_superuser:
+            return True
+        return False
 
 
 class UserProfile(AddressEntity):
@@ -128,6 +138,9 @@ class CandidateCV(DateTimeEntity):
     cv = models.FileField(upload_to="candidate_cvs/")
     candidate = models.ForeignKey(
         UserProfile, on_delete=models.CASCADE, related_name='candidate_cv')
+    
+    def file_name(self):
+        return os.path.basename(self.cv.name)
 
 
 class OrganizationDocuments(DateTimeEntity):
