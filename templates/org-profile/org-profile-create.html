@@ -23,28 +23,32 @@
                             <div class="d-flex align-items-center justify-content-between font-14"><span
                                     class="text-gray-500">Register your further details</span>
                                 <a class="text-info text-underline-hover" href="" id="orgAddressBtn">Add Address</a>
-                                <a class="text-info text-underline-hover d-none" href="" id="orgBackBtn">Back to Info</a>
+                                <a class="text-info text-underline-hover d-none" href="" id="orgBackBtn">Back to
+                                    Info</a>
                             </div>
                         </div>
-                        <form method="post">
+                        <form method="post" enctype="multipart/form-data"
+                            action="{% url 'users:org_profile_create' user.user_uuid %}">
+                            {% csrf_token %}
                             <div class="auth--form">
                                 <div class="personal-info">
                                     <div class="form-group">
-                                        <label for="username">Organization Name</label>
+                                        <label for="name">Organization Name</label>
                                         {{form.name}}
                                     </div>
                                     <div class="form-group">
-                                        <label for="password">Mobile Number</label>
+                                        <label for="mobile_number">Mobile Number</label>
                                         {{form.mobile_number}}
                                     </div>
                                     <div class="form-group">
-                                        <label for="password">Phone Number</label>
+                                        <label for="phone_number">Phone Number</label>
                                         {{form.phone_number}}
                                     </div>
                                     <div class="form-group">
                                         <label for="picture">Profile Picture</label>
                                         <div class="custom-file">
-                                            <input class="custom-file-input" type="file" name="display_picture" accept="image">
+                                            <input class="custom-file-input" type="file" name="display_picture"
+                                                accept="image">
                                             <label class="custom-file-label"></label>
                                         </div>
                                     </div>
@@ -55,23 +59,23 @@
                                 </div>
                                 <div class="address-info d-none">
                                     <div class="form-group">
-                                        <label for="username">Province</label>
+                                        <label for="province">Province</label>
                                         {{form.province}}
                                     </div>
                                     <div class="form-group">
-                                        <label for="username">District</label>
+                                        <label for="district">District</label>
                                         {{form.district}}
                                     </div>
                                     <div class="form-group">
-                                        <label for="username">Area</label>
+                                        <label for="area">Area</label>
                                         {{form.area}}
                                     </div>
                                     <div class="form-group">
-                                        <label for="username">City</label>
+                                        <label for="city">City</label>
                                         {{form.city}}
                                     </div>
                                     <div class="form-group">
-                                        <label for="username">Other Description</label>
+                                        <label for="description">Other Description</label>
                                         <textarea name="description" cols="35" rows="5"></textarea>
                                     </div>
                                 </div>

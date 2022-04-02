@@ -26,29 +26,32 @@
                                 <a class="text-info text-underline-hover d-none" href="" id="backBtn">Back to Info</a>
                             </div>
                         </div>
-                        <form method="post">
+                        <form method="post" enctype="multipart/form-data"
+                            action="{% url 'users:user_profile_create' user.user_uuid %}">
+                            {% csrf_token %}
                             <div class="auth--form">
                                 <div class="personal-info">
                                     <div class="form-group">
-                                        <label for="username">First Name</label>
+                                        <label for="first_name">First Name</label>
                                         {{form.first_name}}
                                     </div>
                                     <div class="form-group">
-                                        <label for="password">Middle Name</label>
+                                        <label for="middle_name">Middle Name</label>
                                         {{form.middle_name}}
                                     </div>
                                     <div class="form-group">
-                                        <label for="password">Last Name</label>
-                                        {{form.middle_name}}
+                                        <label for="last_name">Last Name</label>
+                                        {{form.last_name}}
                                     </div>
                                     <div class="form-group">
-                                        <label for="password">Mobile Number</label>
+                                        <label for="mobile_number">Mobile Number</label>
                                         {{form.mobile_number}}
                                     </div>
                                     <div class="form-group">
                                         <label for="profile_picture">Profile Picture</label>
                                         <div class="custom-file">
-                                            <input class="custom-file-input" type="file" name="display_picture" accept="image">
+                                            <input class="custom-file-input" type="file" name="display_picture"
+                                                accept="image">
                                             <label class="custom-file-label"></label>
                                         </div>
                                     </div>
@@ -75,23 +78,23 @@
                                 </div>
                                 <div class="address-info d-none">
                                     <div class="form-group">
-                                        <label for="username">Province</label>
+                                        <label for="province">Province</label>
                                         {{form.province}}
                                     </div>
                                     <div class="form-group">
-                                        <label for="username">District</label>
+                                        <label for="district">District</label>
                                         {{form.district}}
                                     </div>
                                     <div class="form-group">
-                                        <label for="username">Area</label>
+                                        <label for="area">Area</label>
                                         {{form.area}}
                                     </div>
                                     <div class="form-group">
-                                        <label for="username">City</label>
+                                        <label for="city">City</label>
                                         {{form.city}}
                                     </div>
                                     <div class="form-group">
-                                        <label for="username">Other Description</label>
+                                        <label for="description">Other Description</label>
                                         <textarea name="description" cols="35" rows="5"></textarea>
                                     </div>
                                 </div>

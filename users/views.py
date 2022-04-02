@@ -1,4 +1,6 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.generic import CreateView
 from django.views import View
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -6,17 +8,18 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from users.abstract import Country
 from users.forms import OrganizationProfileForm, UserProfileForm
 from users.models import OrganizationProfile, UserProfile
 from .serializers import *
 from rest_framework.generics import ListAPIView
-
+from django.urls import reverse
 
 User = get_user_model()
 account_activation_token = PasswordResetTokenGenerator()
 
 
-class VerifyEmail(APIView):
+class VerifyEmail(View):
     """ To Verify Email of Candidate and Organization """
 
     def get(self, request, *args, **kwargs):
@@ -25,13 +28,13 @@ class VerifyEmail(APIView):
             user = User.objects.get(pk=uid)
         except Exception:
             user = None
-
         if user and PasswordResetTokenGenerator.check_token(self=account_activation_token, user=user,
                                                             token=kwargs.get('token')):
             user.is_email_verified = True
             user.save()
-
-            return Response({"message": "Email Verified Successfully"}, status=status.HTTP_200_OK)
+            if user.user_type == "Organization":
+                return redirect(reverse("users:org_profile_create", kwargs={"uuid": user.user_uuid}))
+            return redirect(reverse("users:user_profile_create", kwargs={"uuid": user.user_uuid}))
         else:
             return Response({"message": "Invalid Token. Please enter valid token"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -39,7 +42,8 @@ class VerifyEmail(APIView):
 class CreateUserView(APIView):
 
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
+        serializer = UserSerializer(
+            data=request.data, context={"request": request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -47,42 +51,44 @@ class CreateUserView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CreateUserProfile(View):
-    # TODO: urls, template, testing
+class CreateUserProfile(CreateView):
     model = UserProfile
     form_class = UserProfileForm
     template_name = "user-profile/user-profile-create.html"
 
-    def get(self, request, *args, **kwargs):
-        context = {}
-        context['form'] = self.form_class
-        return render(request, self.template_name, context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = get_object_or_404(User, user_uuid=self.kwargs.get('uuid'))
+        context['user'] = user
+        return context
 
-    def post(self, request, *args, **kwargs):
-        profile = self.form_class.save(commit=False)
+    def form_valid(self, form):
+        profile = form.save(commit=False)
         user = get_object_or_404(User, user_uuid=self.kwargs.get('uuid'))
         profile.user = user
+        profile.country = Country.objects.first()
         profile.save()
-        return redirect()
+        return HttpResponseRedirect("http://localhost:3000/login")
 
 
-class CreateOrganizationProfile(View):
-    # TODO: urls, template, testing
+class CreateOrganizationProfile(CreateView):
     model = OrganizationProfile
     form_class = OrganizationProfileForm
     template_name = "org-profile/org-profile-create.html"
 
-    def get(self, request, *args, **kwargs):
-        context = {}
-        context['form'] = self.form_class
-        return render(request, self.template_name, context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = get_object_or_404(User, user_uuid=self.kwargs.get('uuid'))
+        context['user'] = user
+        return context
 
-    def post(self, request, *args, **kwargs):
-        profile = self.form_class.save(commit=False)
+    def form_valid(self, form):
+        profile = form.save(commit=False)
         user = get_object_or_404(User, user_uuid=self.kwargs.get('uuid'))
         profile.user = user
+        profile.country = Country.objects.first()
         profile.save()
-        return redirect()
+        return HttpResponseRedirect("http://localhost:3000/login")
 
 
 class GetUserDetailsView(APIView):

@@ -21,20 +21,21 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "username", "email", "password"]
+        fields = ["id", "username", "email", "password", "user_type"]
 
     def create(self, validated_data):
+        request = self.context.get('request')
         user = User.objects.create(**validated_data)
         user.set_password(validated_data.get('password'))
         user.save()
-
         # send email to candidate and organization for email verification
         subject = "Email Verification - Intellijobs"
         message = render_to_string('email-templates/email-verification.html', {
+            'logo': request.build_absolute_uri('/static/assets/images/logo.png'),
             'user': user,
-            'domain': get_current_site(self.request),
+            'domain': get_current_site(request),
             'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            'url': self.request.build_absolute_uri('/'),
+            'url': request.build_absolute_uri('/'),
             'token': PasswordResetTokenGenerator.make_token(self=account_activation_token, user=user),
         })
 
@@ -89,7 +90,9 @@ class GetUserProfileSerializer(serializers.ModelSerializer):
         return obj.user.email
 
     def get_dob(self, obj):
-        return obj.dob.strftime("%b %d, %Y")
+        if obj.dob:
+            return obj.dob.strftime("%b %d, %Y")
+        return None
 
     def get_display_picture(self, obj):
         request = self.context.get('request')
