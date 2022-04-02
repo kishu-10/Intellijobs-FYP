@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
+from dashboard.mixins import DashboardUserMixin
 from jobs.forms import CategoryForm, JobForm
 from jobs.serializers import *
 from rest_framework import status
@@ -13,7 +14,8 @@ from django.contrib import messages
 
 # Create your views here.
 
-class DashboardJobCategoryCreateView(CreateView):
+# Dashboard side
+class DashboardJobCategoryCreateView(DashboardUserMixin, CreateView):
     model = Category
     form_class = CategoryForm
     success_url = reverse_lazy("dashboard:category_list")
@@ -27,13 +29,13 @@ class DashboardJobCategoryCreateView(CreateView):
         return HttpResponseRedirect(self.success_url)
 
 
-class DashboardJobCategoryListView(ListView):
+class DashboardJobCategoryListView(DashboardUserMixin, ListView):
     model = Category
     template_name = "job-category/category-list.html"
     context_object_name = "category_list"
 
 
-class DashboardJobCategoryUpdateView(UpdateView):
+class DashboardJobCategoryUpdateView(DashboardUserMixin, UpdateView):
     model = Category
     form_class = CategoryForm
     template_name = "job-category/category-update.html"
@@ -47,7 +49,7 @@ class DashboardJobCategoryUpdateView(UpdateView):
         return HttpResponseRedirect(self.success_url)
 
 
-class DashboardJobCategoryDeleteView(View):
+class DashboardJobCategoryDeleteView(DashboardUserMixin, View):
     success_url = reverse_lazy("dashboard:category_list")
 
     def post(self, request, *args, **kwargs):
@@ -57,10 +59,8 @@ class DashboardJobCategoryDeleteView(View):
             self.request, f"{category.name} deleted successfully.")
         return HttpResponseRedirect(self.success_url)
 
-# TODO: check CRUD and validation
 
-
-class DashboardJobCreateView(CreateView):
+class DashboardJobCreateView(DashboardUserMixin, CreateView):
     model = Job
     form_class = JobForm
     success_url = reverse_lazy("dashboard:jobs_list")
@@ -76,18 +76,21 @@ class DashboardJobCreateView(CreateView):
         return HttpResponseRedirect(self.success_url)
 
 
-class DashboardJobListView(ListView):
+class DashboardJobListView(DashboardUserMixin, ListView):
     model = Job
     template_name = "jobs/jobs-list.html"
     context_object_name = "jobs_list"
 
-    # def get_queryset(self):
-    #     org_profile = self.request.user.org_profile
-    #     queryset = Job.objects.filter(organization=org_profile)
-    #     return queryset
+    def get_queryset(self):
+        if self.request.user.user_type == "Organization":
+            org_profile = self.request.user.org_profile
+            queryset = Job.objects.filter(organization=org_profile)
+        else:
+            queryset = Job.objects.order_by('-date_created')
+        return queryset
 
 
-class DashboardJobUpdateView(UpdateView):
+class DashboardJobUpdateView(DashboardUserMixin, UpdateView):
     model = Job
     form_class = JobForm
     template_name = "jobs/jobs-update.html"
@@ -101,7 +104,7 @@ class DashboardJobUpdateView(UpdateView):
         return HttpResponseRedirect(self.success_url)
 
 
-class DashboardJobDeleteView(View):
+class DashboardJobDeleteView(DashboardUserMixin, View):
     success_url = reverse_lazy("dashboard:jobs_list")
 
     def post(self, request, *args, **kwargs):
@@ -112,14 +115,14 @@ class DashboardJobDeleteView(View):
         return HttpResponseRedirect(self.success_url)
 
 
-class DashboardCandidateJobApplicationListView(DetailView):
+class DashboardCandidateJobApplicationListView(DashboardUserMixin, DetailView):
     model = Job
     context_object_name = "job"
     template_name = "jobs/candidate-applications.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['candidates'] = JobApplication.objects.filter(job=self.object)
+        context['applications'] = JobApplication.objects.filter(job=self.object).order_by('-date_created', '-id')
         return context
 
 

@@ -12,51 +12,51 @@
     <div class="card-body">
       <div class="row mt-2">
         <div class="col-lg-12 pl-4 pr-4">
-            <div class="form-row mt-lg-0 mt-3 card--white">
-              <div class="accordion col-lg" id="profileDetails">
-                <div class="card--white">
-                  <div data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
-                    aria-controls="collapseOne">
-                    <span class="font-16 font-weight-bold">Profile Details</span>
-                    <i class="ic-chevron-down accordion-drop-icon"></i>
-                  </div>
-                  <div id="collapseOne" aria-labelledby="faqTwo" data-parent="#profileDetails">
-                    <div class="accordion-card-body font-14">
-                      <div class="organization-details">
-                        <div class="item">
-                          <h6>Mobile Number</h6>
-                          <p>{{organization.mobile_number}}</p>
-                        </div>
-                        <div class="item">
-                          <h6>Phone Number</h6>
-                          <p>{{organization.phone_number}}</p>
-                        </div>
-                        <div class="item">
-                          <h6>Verification Status</h6>
-                          <p>{% if organization.verification_status == "Verified" %}
-                            <span class="badge badge-success">Verified</span>
-                            {% elif organization.verification_status == "Pending" %}
-                            <span class="badge badge-muted">Pending</span>
-                            {% else %}
-                            <span class="badge badge-danger">Rejected</span>
-                            {% endif %}</p>
-                        </div>
-                        <div class="item">
-                          <h6>Verified By</h6>
-                          <p>{{organization.verified_by}}</p>
-                        </div>
+          <div class="form-row mt-lg-0 mt-3 card--white">
+            <div class="accordion col-lg" id="profileDetails">
+              {% for application in applications %}
+              <div class="card--white mb-5">
+                <div data-toggle="collapse" data-target="#collapse{{forloop.counter}}" aria-expanded="true" aria-controls="collapse{{forloop.counter}}">
+                  <span class="font-16 font-weight-bold">{{application.candidate.get_full_name}}</span>
+                  <i class="ic-chevron-down accordion-drop-icon"></i>
+                </div>
+                <div id="collapse{{forloop.counter}}" aria-labelledby="candidate{{forloop.counter}}" data-parent="#profileDetails">
+                  <div class="accordion-card-body font-14">
+                    
+                    <div class="organization-details">
+                      <div class="item">
+                        <h6>Candidate Name</h6>
+                        <p>{{application.candidate.get_full_name}}</p>
                       </div>
-                      <div class="item desc">
-                        <h6>Description</h6>
-                        <p>{{organization.description}}</p>
+                      <div class="item">
+                        <h6>Mobile Number</h6>
+                        <p>{{application.candidate.mobile_number}}</p>
                       </div>
+                      <div class="item">
+                        <h6>Address</h6>
+                        <p>{{application.candidate.city}}</p>
+                      </div>
+                      <div class="item">
+                        <h6>Applied Date</h6>
+                        <p>{{application.date_created|date:"M d, Y"}}</p>
+                      </div>
+                      <a class="card card--gray col-md-6 mt-3" href="{{application.cv.cv.url}}" target="_blank">
+                        <div class="align-vertical justify-content-center">
+                          <h4 class="ic-receipt mr-2"></h4>
+                          <p>{{application.cv.file_name}}</p>
+                        </div>
+                      </a>
                     </div>
+                   
                   </div>
                 </div>
               </div>
+              {% endfor %}
             </div>
-            <div class="section-footer mt-5">
-            </div>
+          </div>
+          <div class="section-footer">
+            <a class="btn btn-outline-gray" href="{% url 'dashboard:jobs_list' %}">Back</a>
+          </div>
         </div>
       </div>
     </div>

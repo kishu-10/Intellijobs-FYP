@@ -64,7 +64,7 @@
                       </div>
                       <div class="item desc">
                         <h6>Description</h6>
-                        <p>{{organization.description}}</p>
+                        <p>{{organization.org_description}}</p>
                       </div>
                     </div>
                   </div>
@@ -139,7 +139,7 @@
               </div>
             </div>
             <div class="section-footer mt-5">
-              <a class="btn btn-outline-gray" href="{% url 'dashboard:category_list' %}">Cancel</a>
+              <a class="btn btn-outline-gray" href="{% url 'dashboard:jobs_list' %}">Cancel</a>
               <a class="btn text-white btn-danger" data-toggle="modal" data-target="#rejectModal"
                 data-url="{% url 'dashboard:reject_organization_verify' organization.pk %}">Reject</a>
               <button class="btn btn-success" type="submit">Verify</button>

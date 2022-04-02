@@ -15,6 +15,7 @@ from users.models import OrganizationProfile, UserProfile
 from .serializers import *
 from rest_framework.generics import ListAPIView
 from django.urls import reverse
+from django.contrib import messages
 
 User = get_user_model()
 account_activation_token = PasswordResetTokenGenerator()
@@ -105,6 +106,10 @@ class OrganizationProfileUpdateView(DashboardUserMixin, UpdateView):
     form_class = OrganizationProfileForm
     template_name = "org-profile/org-profile-update.html"
     context_object_name = "organization"
+
+    def form_valid(self, form):
+        messages.success(self.request, "Profile updated successfully.")
+        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse("dashboard:update_org_profile", kwargs={'pk': self.object.pk})

@@ -16,7 +16,7 @@ def check_active_sidebar_links(request):
 
     org_profile_url_status
     # checking job urls active status
-    job_urls = ["jobs_list", "jobs_create", "jobs_update"]
+    job_urls = ["jobs_list", "jobs_create", "jobs_update", "applied_candidates"]
     job_category_urls = ["category_list", "category_create", "category_update"]
     job_combine_urls = job_urls + job_category_urls
 
