@@ -10,7 +10,7 @@ class UserProfileForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        exclude = ["user", "slug"]
+        exclude = ["user", "slug", "country"]
 
     def __init__(self, *args, **kwargs):
         super(UserProfileForm, self).__init__(*args, **kwargs)
@@ -30,7 +30,7 @@ class OrganizationProfileForm(forms.ModelForm):
     class Meta:
         model = OrganizationProfile
         exclude = ["user", "slug",
-                   "verification_status", "verification_status"]
+                   "verified_by", "verification_status", "country"]
 
     def __init__(self, *args, **kwargs):
         super(OrganizationProfileForm, self).__init__(*args, **kwargs)
