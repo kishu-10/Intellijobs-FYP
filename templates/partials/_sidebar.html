@@ -13,6 +13,13 @@
           >Dashboard</a
         >
       </li>
+      {% if user_status == "Organization" and has_org_profile %}
+      <li class="sidebar-item">
+        <a class="sidebar-link {% if active_url == "organization-profile" %}active{% endif %}" href="{% url 'dashboard:update_org_profile' org_profile.pk %}"
+          >Update Profile</a
+        >
+      </li>
+      {% endif %}
       <li class="sidebar-item">
         <a
           class="sidebar-link hasSub"
@@ -32,6 +39,7 @@
           </li>
         </ul>
       </li>
+      {% if user_status == "Staff" %}
       <li class="sidebar-item">
         <a class="sidebar-link {% if active_url == "verify-organization" %}active{% endif %}" href="{% url 'dashboard:verify_organization_list' %}"
           >Verify Organizations</a
@@ -42,6 +50,7 @@
           >Register Staffs</a
         >
       </li>
+      {% endif %}
     </ul>
   </div>
 </aside>

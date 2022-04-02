@@ -7,6 +7,7 @@ from jobs.views import (DashboardCandidateJobApplicationListView, DashboardJobCa
                         DashboardJobUpdateView)
 
 from dashboard.views import *
+from users.views import OrganizationProfileUpdateView
 
 app_name = "dashboard"
 
@@ -14,6 +15,9 @@ urlpatterns = [
     path("", DashboardIndexView.as_view(), name="index"),
     path('login/<slug:uuid>/', UserLoginDashboardView.as_view(), name="login"),
     path('logout/', UserLogoutView.as_view(), name="logout"),
+
+    # Organization Profile
+    path("org-profile/update/<int:pk>/", OrganizationProfileUpdateView.as_view(), name="update_org_profile"),
 
     # Verify Organization
     path("verify-organizations/", DashboardVerifyOrganizationList.as_view(),

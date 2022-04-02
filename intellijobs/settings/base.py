@@ -76,6 +76,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'dashboard.context_processors.check_active_sidebar_links',
+                'dashboard.context_processors.get_user_status',
+                'dashboard.context_processors.get_org_profile',
             ],
         },
     },

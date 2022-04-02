@@ -18,14 +18,14 @@ class DashboardIndexView(DashboardUserMixin, TemplateView):
     template_name = "index.html"
 
 
-class DashboardVerifyOrganizationList(ListView):
+class DashboardVerifyOrganizationList(DashboardUserMixin, ListView):
     model = OrganizationProfile
     queryset = OrganizationProfile.objects.all()
     template_name = "verify-organization/verify-organization-list.html"
     context_object_name = "organizations"
 
 
-class DashboardVerifyOrganization(View):
+class DashboardVerifyOrganization(DashboardUserMixin, View):
     template_name = "verify-organization/verify-organization.html"
 
     def get(self, request, *args, **kwargs):
@@ -56,7 +56,7 @@ class DashboardVerifyOrganization(View):
         return redirect('dashboard:verify_organization_list')
 
 
-class DashboardRejectOrganizationVerification(View):
+class DashboardRejectOrganizationVerification(DashboardUserMixin, View):
 
     def post(self, request, *args, **kwargs):
         organization = get_object_or_404(
@@ -68,14 +68,14 @@ class DashboardRejectOrganizationVerification(View):
         return redirect("dashboard:verify_organization_list")
 
 
-class DashboardRegisterStaffListView(ListView):
+class DashboardRegisterStaffListView(DashboardUserMixin, ListView):
     model = User
     queryset = User.objects.filter(user_type="Staff")
     template_name = "staff-registration/staff-register-list.html"
     context_object_name = "staffs"
 
 
-class DashboardRegisterStaffCreateView(CreateView):
+class DashboardRegisterStaffCreateView(DashboardUserMixin, CreateView):
     model = User
     form_class = StaffRegistrationForm
     template_name = "staff-registration/staff-register-create.html"
@@ -102,7 +102,7 @@ class DashboardRegisterStaffCreateView(CreateView):
         return super().form_valid(form)
 
 
-class DashboardRegisterStaffUpdateView(UpdateView):
+class DashboardRegisterStaffUpdateView(DashboardUserMixin, UpdateView):
     model = User
     form_class = StaffRegistrationForm
     template_name = "staff-registration/staff-register-update.html"
@@ -129,7 +129,7 @@ class DashboardRegisterStaffUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-class DashboardRegisterStaffDeleteView(View):
+class DashboardRegisterStaffDeleteView(DashboardUserMixin, View):
 
     def post(self, request, *args, **kwargs):
         staff = get_object_or_404(User, pk=self.kwargs.get('pk'))

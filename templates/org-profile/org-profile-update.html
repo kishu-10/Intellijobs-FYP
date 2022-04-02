@@ -1,0 +1,124 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block main_content %}
+<div class="container">
+  <div class="page-header">
+    <h2 class="mb-0">Verify Organization</h2>
+    <a class="btn btn-sm btn-info btn-icon" href="{% url 'dashboard:verify_organization_list' %}">
+      <span class="ic-arrow-left"></span>Back to Organizations
+    </a>
+  </div>
+  <div class="card section-spacer">
+    <div class="card-body">
+      <div class="row mt-2">
+        <div class="col-lg-3">
+          <div class="form-row justify-content-center text-center">
+            {% if organization.display_picture %}
+            <img src="{{organization.display_picture.url}}" width="250dp"
+              style="margin-left: 5px; margin-bottom: 10px" />
+            {% else %}
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8oSUHS5yxksmIz2xmT1AD-TQpWx0OuRFMB6AM_mM4KNSOJ-M-k1QrGQsMrXPf1p8V3SA&usqp=CAU"
+              width="250dp" style="margin-left: 5px; margin-bottom: 10px" />
+            {% endif %}
+            <h2 class="ml-2 mb-3">{{organization.name}}</h2>
+          </div>
+        </div>
+        <div class="col-lg-9">
+          <form method="post" action="{% url 'dashboard:update_org_profile' organization.pk %}"
+            enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-row mt-lg-0 mt-3 card--white">
+              <div class="accordion col-lg" id="profileDetails">
+                <div class="card--white">
+                  <div data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+                    aria-controls="collapseOne">
+                    <span class="font-16 font-weight-bold">Profile Details</span>
+                    <i class="ic-chevron-down accordion-drop-icon"></i>
+                  </div>
+                  <div id="collapseOne" aria-labelledby="faqTwo" data-parent="#profileDetails">
+                    <div class="accordion-card-body font-14">
+                      <div class="form-row">
+                        <div class="col-md-4 form-group">
+                          <label for="name">Organization Name</label>
+                          {{form.name}}
+                          <p class="error">{{form.name.errors|striptags}}</p>
+                        </div>
+                        <div class="col-md-4 form-group">
+                          <label for="mobile_number">Mobile Number</label>
+                          {{form.mobile_number}}
+                          <p class="error">{{form.mobile_number.errors|striptags}}</p>
+                        </div>
+                        <div class="col-md-4 form-group">
+                          <label for="phone_number">Phone Number</label>
+                          {{form.phone_number}}
+                          <p class="error">{{form.phone_number.errors|striptags}}</p>
+                        </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="col-md form-group">
+                          <label for="org_description">About Organization</label>
+                          <textarea class="form-control" name="org_description" rows="7">{{organization.org_description}}</textarea>
+                          <p class="error">{{form.org_description.errors|striptags}}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-row pt-5 card--white">
+              <div class="accordion col-lg" id="addressDetails">
+                <div class="card--white">
+                  <div class="collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
+                    aria-controls="collapseTwo">
+                    <span class="font-16 font-weight-bold">Address Details</span>
+                    <i class="ic-chevron-down accordion-drop-icon"></i>
+                  </div>
+                  <div class="collapse" id="collapseTwo" aria-labelledby="faqTwo" data-parent="#addressDetails">
+                    <div class="accordion-card-body font-14">
+                      <div class="form-row">
+                        <div class="col-md-3 form-group">
+                          <label for="province">Province</label>
+                          {{form.province}}
+                          <p class="error">{{form.province.errors|striptags}}</p>
+                        </div>
+                        <div class="col-md-3 form-group">
+                          <label for="district">District</label>
+                          {{form.district}}
+                          <p class="error">{{form.district.errors|striptags}}</p>
+                        </div>
+                        <div class="col-md-3 form-group">
+                          <label for="city">City</label>
+                          {{form.city}}
+                          <p class="error">{{form.city.errors|striptags}}</p>
+                        </div>
+                        <div class="col-md-3 form-group">
+                          <label for="city">Area</label>
+                          {{form.area}}
+                          <p class="error">{{form.area.errors|striptags}}</p>
+                        </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="col-md form-group">
+                          <label for="description">Description</label>
+                          <textarea class="form-control" name="description" rows="7">{{organization.description}}</textarea>
+                          <p class="error">{{form.description.errors|striptags}}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="section-footer mt-5">
+              <a class="btn btn-outline-gray" href="{% url 'dashboard:index' %}">Cancel</a>
+              <button class="btn btn-success" type="submit">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock main_content %}

@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import CreateView
+from django.shortcuts import get_object_or_404, redirect
+from django.views.generic import CreateView, UpdateView
 from django.views import View
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -8,6 +8,7 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from dashboard.mixins import DashboardUserMixin
 from users.abstract import Country
 from users.forms import OrganizationProfileForm, UserProfileForm
 from users.models import OrganizationProfile, UserProfile
@@ -19,6 +20,7 @@ User = get_user_model()
 account_activation_token = PasswordResetTokenGenerator()
 
 
+# Django
 class VerifyEmail(View):
     """ To Verify Email of Candidate and Organization """
 
@@ -40,6 +42,7 @@ class VerifyEmail(View):
 
 
 class CreateUserView(APIView):
+    """ View to register new users in the system """
 
     def post(self, request):
         serializer = UserSerializer(
@@ -51,7 +54,9 @@ class CreateUserView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CreateUserProfile(CreateView):
+class UserProfileCreateView(CreateView):
+    """ View to create candidate profile """
+
     model = UserProfile
     form_class = UserProfileForm
     template_name = "user-profile/user-profile-create.html"
@@ -71,7 +76,9 @@ class CreateUserProfile(CreateView):
         return HttpResponseRedirect("http://localhost:3000/login")
 
 
-class CreateOrganizationProfile(CreateView):
+class OrganizationProfileCreateView(CreateView):
+    """ View to create organization profile """
+
     model = OrganizationProfile
     form_class = OrganizationProfileForm
     template_name = "org-profile/org-profile-create.html"
@@ -91,6 +98,19 @@ class CreateOrganizationProfile(CreateView):
         return HttpResponseRedirect("http://localhost:3000/login")
 
 
+class OrganizationProfileUpdateView(DashboardUserMixin, UpdateView):
+    """ View to update organization profile """
+
+    model = OrganizationProfile
+    form_class = OrganizationProfileForm
+    template_name = "org-profile/org-profile-update.html"
+    context_object_name = "organization"
+
+    def get_success_url(self):
+        return reverse("dashboard:update_org_profile", kwargs={'pk': self.object.pk})
+
+
+# Rest Framework
 class GetUserDetailsView(APIView):
 
     def get(self, request, *args, **kwargs):
