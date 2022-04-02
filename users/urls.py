@@ -13,8 +13,8 @@ urlpatterns = [
     path('districts/', GetDistrictListView.as_view(), name="districts"),
     path('profile/update-<int:pk>/', UpdateUserProfileView.as_view(), name="update_profile"),
 
-    path('user-profile/create/<uuid>/', CreateUserProfile.as_view(), name="user_profile_create"),
-    path('org-profile/create/<uuid>/', CreateOrganizationProfile.as_view(), name="org_profile_create"),
+    path('user-profile/create/<uuid>/', UserProfileCreateView.as_view(), name="user_profile_create"),
+    path('org-profile/create/<uuid>/', OrganizationProfileCreateView.as_view(), name="org_profile_create"),
 
     path('register/', CreateUserView.as_view(), name="register_user")
 ]

@@ -4,10 +4,17 @@ from django.urls import include
 def check_active_sidebar_links(request):
     current_url = request.resolver_match.url_name
     active_url = "index"
+    org_profile_url_status = False
     jobs_url_status = False
     verify_org_url_status = False
     register_staff_url_status = False
 
+    # checking job urls active status
+    org_profile_urls = ["update_org_profile"]
+    if current_url in org_profile_urls:
+        org_profile_url_status = True
+
+    org_profile_url_status
     # checking job urls active status
     job_urls = ["jobs_list", "jobs_create", "jobs_update"]
     job_category_urls = ["category_list", "category_create", "category_update"]
@@ -35,6 +42,8 @@ def check_active_sidebar_links(request):
         active_url = "verify-organization"
     elif current_url in register_staff_urls:
         active_url = "register-staff"
+    elif current_url in org_profile_urls:
+        active_url = "organization-profile"
 
     context = {
         'current_url': current_url,
@@ -42,5 +51,24 @@ def check_active_sidebar_links(request):
         'jobs_url_status': jobs_url_status,
         'verify_org_url_status': verify_org_url_status,
         'register_staff_url_status': register_staff_url_status,
+        'org_profile_url_status': org_profile_url_status
     }
+    return context
+
+
+def get_user_status(request):
+    context = {}
+    if not request.user.is_anonymous:
+        context['user_status'] = request.user.user_type
+        context['username'] = request.user.username
+    return context
+
+
+def get_org_profile(request):
+    context = {}
+    if not request.user.is_anonymous:
+        context['has_org_profile'] = False
+        if request.user.user_type == "Organization":
+            context['has_org_profile'] = True
+            context['org_profile'] = request.user.org_profile
     return context
