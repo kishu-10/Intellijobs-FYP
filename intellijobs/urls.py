@@ -24,7 +24,6 @@ from intellijobs.token import CustomTokenObtainPairView
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
-    path('build-cv/', include('cvbuilder.urls')),
     path('tinymce/', include('tinymce.urls')),
     # URLs for token authentication
     path('api/token/', CustomTokenObtainPairView.as_view(),
@@ -35,6 +34,7 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
     path('api/jobs/', include('jobs.urls') ),
     path('api/users/', include('users.urls') ),
+    path('api/cv-builder/', include('cvbuilder.urls') ),
 
 ]
 

@@ -1,17 +1,16 @@
 from django.urls import include, path
-from rest_framework.routers import DefaultRouter
+from rest_framework.routers import SimpleRouter
 
 from .viewsets import *
 
 app_name = "cvbuilder"
 
-router = DefaultRouter()
-router.register(r"resume/", ResumeViewset, basename="resume")
-router.register(r"experience/", ExperienceViewset, basename="experience")
-router.register(r"skill/", SkillViewset, basename="skill")
-router.register(r"education/", EducationViewset, basename="education")
-router.register(r"achivement/", AchievementViewset, basename="achievement")
-router.register(r"language/", LanguageViewset, basename="language")
+router = SimpleRouter()
+router.register("resume", ResumeViewset, basename="resume")
+router.register("experience", ExperienceViewset, basename="experience")
+router.register("skill", SkillViewset, basename="skill")
+router.register("education", EducationViewset, basename="education")
+router.register("achivement", AchievementViewset, basename="achievement")
 
 urlpatterns = [
     path("", include(router.urls))
