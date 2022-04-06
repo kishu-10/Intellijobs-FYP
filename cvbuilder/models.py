@@ -2,10 +2,6 @@ from django.db import models
 from users.abstract import DateTimeEntity
 from users.models import UserProfile
 
-
-CV_DATE_INPUT_FORMATS = ['%b %Y']
-
-
 class Resume(DateTimeEntity):
     image = models.ImageField(upload_to='resume_images', null=True, blank=True)
     profession = models.CharField(max_length=255, null=True, blank=True)
@@ -17,7 +13,7 @@ class Resume(DateTimeEntity):
         UserProfile, on_delete=models.CASCADE, related_name='resume')
 
     def __str__(self):
-        return '%s - %s' % (self.name, self.description)
+        return '%s - %s' % (self.profile.get_full_name(), self.summary)
 
 
 class Experience(models.Model):
@@ -68,12 +64,3 @@ class Achievement(models.Model):
     def __str__(self):
         return self.title
 
-
-class Language(models.Model):
-    title = models.CharField(max_length=255)
-    level = models.CharField(max_length=255)
-    resume = models.ForeignKey(
-        Resume, on_delete=models.CASCADE, related_name='languages')
-
-    def __str__(self):
-        return self.title

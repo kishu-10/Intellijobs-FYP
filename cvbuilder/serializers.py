@@ -8,7 +8,7 @@ class ResumeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Resume
-        fields = ["image", "profession", "summary",
+        fields = ["id","image", "profession", "summary",
                   "linkedin", "github", "website"]
 
 

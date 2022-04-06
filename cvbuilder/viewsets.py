@@ -31,7 +31,3 @@ class AchievementViewset(ModelViewSet, CreateAchievementMixin):
     serializer_class = AchievementSerializer
     queryset = Achievement.objects.all()
 
-
-class LanguageViewset(ModelViewSet, CreateLanguageMixin):
-    serializer_class = ResumeSerializer
-    queryset = Language.objects.all()

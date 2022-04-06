@@ -1,5 +1,7 @@
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
+from cvbuilder.models import Resume
+from cvbuilder.serializers import ResumeSerializer
 from intellijobs.tasks import send_email_verfication
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
@@ -95,6 +97,7 @@ class GetUserProfileSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
     dob = serializers.SerializerMethodField()
     display_picture = serializers.SerializerMethodField()
+    resume = serializers.SerializerMethodField()
 
     class Meta:
         model = UserProfile
@@ -115,6 +118,11 @@ class GetUserProfileSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if obj.display_picture:
             return request.build_absolute_uri(obj.display_picture.url)
+        return None
+    
+    def get_resume(self, obj):
+        if Resume.objects.filter(profile=obj).exists():
+            return ResumeSerializer(Resume.objects.filter(profile=obj).first(), many=False).data
         return None
 
 
