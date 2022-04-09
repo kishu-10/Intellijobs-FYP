@@ -13,9 +13,11 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         refresh = self.get_token(self.user)
         user = dict()
         if not self.user.is_email_verified:
-            raise ValidationError({'message': 'Please verify your email address.'})
+            raise ValidationError(
+                {'message': 'Please verify your email address.'})
         if not self.user.has_profile:
-            raise ValidationError({'message': 'Please complete the registration process for your profile.'})
+            raise ValidationError(
+                {'message': 'Please complete the registration process for your profile.'})
         try:
             data['refresh'] = str(refresh)
             data['access'] = str(refresh.access_token)
@@ -25,15 +27,17 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             user['email'] = self.user.email
             user["user_type"] = self.user.user_type
             user["verified_email"] = self.user.is_email_verified
-            if self.user.user_type == "Candidate" or self.user.user_type == "Staff":
+            if self.user.user_type == "Candidate":
                 user['name'] = self.user.user_profile.get_full_name()
-            else:
+            elif self.user.user_type == "Organizaiton":
                 user['name'] = self.user.org_profile.name
-            if self.user.user_type == "Candidate" or self.user.user_type == "Staff":
+            else:
+                user['name'] = "Staff User"
+            if self.user.user_type == "Candidate":
                 if self.user.user_profile.display_picture:
                     user['picture'] = request.build_absolute_uri(
                         self.user.user_profile.display_picture.url)
-            else:
+            elif self.user.user_type == "Organization":
                 if self.user.org_profile.display_picture:
                     user['picture'] = request.build_absolute_uri(
                         self.user.org_profile.display_picture.url)

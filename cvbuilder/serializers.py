@@ -8,8 +8,8 @@ class ResumeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Resume
-        fields = ["id","image", "profession", "summary",
-                  "linkedin", "github", "website"]
+        fields = ["id", "profession", "summary",
+                  "linkedin", "website"]
 
 
 class ExperienceSerializer(serializers.ModelSerializer):
@@ -36,11 +36,3 @@ class EducationSerializer(serializers.ModelSerializer):
         model = Education
         fields = ["title", "university", "degree", "subject",
                   "address", "start_date", "end_date", "description"]
-
-
-class AchievementSerializer(serializers.ModelSerializer):
-    """ To create, update and delete Resume Achievement """
-
-    class Meta:
-        model = Achievement
-        fields = ["title", "description"]

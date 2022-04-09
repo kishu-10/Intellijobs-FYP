@@ -25,9 +25,3 @@ class SkillViewset(ModelViewSet, CreateSkillMixin):
 class EducationViewset(ModelViewSet, CreateEducationMixin):
     serializer_class = EducationSerializer
     queryset = Education.objects.all()
-
-
-class AchievementViewset(ModelViewSet, CreateAchievementMixin):
-    serializer_class = AchievementSerializer
-    queryset = Achievement.objects.all()
-

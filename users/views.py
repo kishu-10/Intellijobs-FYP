@@ -119,7 +119,7 @@ class OrganizationProfileUpdateView(DashboardUserMixin, UpdateView):
 class GetUserDetailsView(APIView):
 
     def get(self, request, *args, **kwargs):
-        user = User.objects.get(id=self.kwargs.get('pk'))
+        user = User.objects.get(user_uuid=self.kwargs.get('uuid'))
         serializer = UserGetSerializer(user, context={'request': self.request})
         return Response(serializer.data)
 
@@ -127,7 +127,7 @@ class GetUserDetailsView(APIView):
 class GetUserProfileDetailsView(APIView):
 
     def get(self, request, *args, **kwargs):
-        user = User.objects.get(id=self.kwargs.get('pk'))
+        user = User.objects.get(user_uuid=self.kwargs.get('uuid'))
         if user.user_type == "Candidate":
             profile = UserProfile.objects.get(user=user)
             serializer = GetUserProfileSerializer(
@@ -149,7 +149,7 @@ class GetDistrictListView(ListAPIView):
 class UpdateUserAddressView(APIView):
 
     def get(self, request, *args, **kwargs):
-        user = User.objects.get(id=self.kwargs.get('pk'))
+        user = User.objects.get(user_uuid=self.kwargs.get('uuid'))
         if user.user_type == "Candidate":
             profile = UserProfile.objects.get(user=user)
             serializer = UpdateUserAddressSerializer(profile)
@@ -157,7 +157,7 @@ class UpdateUserAddressView(APIView):
         return Response([])
 
     def post(self, request, *args, **kwargs):
-        user = User.objects.get(id=self.kwargs.get('pk'))
+        user = User.objects.get(user_uuid=self.kwargs.get('uuid'))
         profile = UserProfile.objects.get(user=user)
         serializer = UpdateUserAddressSerializer(
             profile, data=request.data, partial=True)
@@ -170,7 +170,7 @@ class UpdateUserAddressView(APIView):
 class UpdateUserProfileView(APIView):
 
     def get(self, request, *args, **kwargs):
-        user = User.objects.get(id=self.kwargs.get('pk'))
+        user = User.objects.get(user_uuid=self.kwargs.get('uuid'))
         if user.user_type == "Candidate":
             profile = UserProfile.objects.get(user=user)
             serializer = UpdateUserProfileSerializer(profile)
@@ -178,7 +178,7 @@ class UpdateUserProfileView(APIView):
         return Response([])
 
     def post(self, request, *args, **kwargs):
-        user = User.objects.get(id=self.kwargs.get('pk'))
+        user = User.objects.get(user_uuid=self.kwargs.get('uuid'))
         profile = UserProfile.objects.get(user=user)
         serializer = UpdateUserProfileSerializer(
             profile, data=request.data, partial=True)
