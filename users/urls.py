@@ -16,5 +16,7 @@ urlpatterns = [
     path('user-profile/create/<uuid>/', UserProfileCreateView.as_view(), name="user_profile_create"),
     path('org-profile/create/<uuid>/', OrganizationProfileCreateView.as_view(), name="org_profile_create"),
 
-    path('register/', CreateUserView.as_view(), name="register_user")
+    path('register/', CreateUserView.as_view(), name="register_user"),
+
+    path('candidate-cv/<uuid>/', GetUserCvView.as_view(), name="candidate_cv")
 ]

@@ -11,7 +11,7 @@ from django.utils.encoding import force_bytes
 from django.contrib.sites.shortcuts import get_current_site
 from rest_framework.validators import UniqueValidator
 from users.abstract import District, Province
-from .models import UserProfile
+from .models import CandidateCV, UserProfile
 
 User = get_user_model()
 account_activation_token = PasswordResetTokenGenerator()
@@ -119,7 +119,7 @@ class GetUserProfileSerializer(serializers.ModelSerializer):
         if obj.display_picture:
             return request.build_absolute_uri(obj.display_picture.url)
         return None
-    
+
     def get_resume(self, obj):
         if Resume.objects.filter(profile=obj).exists():
             return ResumeSerializer(Resume.objects.filter(profile=obj).first(), many=False).data
@@ -162,3 +162,26 @@ class UpdateUserProfileSerializer(serializers.ModelSerializer):
 
     def get_email(self, obj):
         return obj.user.email
+
+
+class GetCandidateCvSerializer(serializers.ModelSerializer):
+    cv = serializers.SerializerMethodField()
+    file_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CandidateCV
+        fields = "__all__"
+
+    def get_cv(self, obj):
+        request = self.context.get('request')
+        return request.build_absolute_uri(obj.cv.url)
+
+    def get_file_name(self, obj):
+        return obj.file_name()
+
+
+class CandidateCvSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CandidateCV
+        fields = ["id", "cv"]

@@ -105,3 +105,21 @@ class JobDetailSerializer(serializers.ModelSerializer):
             return obj.organization.area
         elif obj.organization.city:
             return obj.organization.city
+
+
+class GetJobWishListSerializer(serializers.ModelSerializer):
+    jobs = serializers.SerializerMethodField()
+
+    class Meta:
+        model = JobWishlist
+        fields = "__all__"
+
+    def get_jobs(self, obj):
+        request = self.context.get('request')
+        jobs = obj.wishlist_detail.filter(is_active=True)
+        job_list = list()
+        for i in jobs:
+            job_list.append(i.job)
+        serializer = JobSerializer(
+            job_list, many=True, context={'request': request})
+        return serializer.data
