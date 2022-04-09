@@ -1,13 +1,15 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
+from feeds.views import GetNetworksView
+
 from .viewsets import *
 
 router = DefaultRouter()
-router.register(r"image/", PostImageViewSet, basename="post_images")
-router.register(r"like/", LikeViewSet, basename="post_likes")
-router.register(r"comment/", CommentViewSet, basename="post_comments")
+
+app_name = "feeds"
 
 urlpatterns = [
-    path("", include(router.urls))
+    path("", include(router.urls)),
+    path("networks/", GetNetworksView.as_view(), name="networks_list")
 ]

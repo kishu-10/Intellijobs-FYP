@@ -35,6 +35,7 @@ urlpatterns = [
     path('api/jobs/', include('jobs.urls') ),
     path('api/users/', include('users.urls') ),
     path('api/cv-builder/', include('cvbuilder.urls') ),
+    path('api/feeds/', include('feeds.urls') ),
 
 ]
 
