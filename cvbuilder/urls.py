@@ -10,7 +10,6 @@ router.register("resume", ResumeViewset, basename="resume")
 router.register("experience", ExperienceViewset, basename="experience")
 router.register("skill", SkillViewset, basename="skill")
 router.register("education", EducationViewset, basename="education")
-router.register("achivement", AchievementViewset, basename="achievement")
 
 urlpatterns = [
     path("", include(router.urls))

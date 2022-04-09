@@ -10,7 +10,7 @@ class CreateResumeMixin(CreateModelMixin):
     def perform_create(self, serializer):
         try:
             profile = User.objects.get(
-                pk=self.request.data.get('user_id')).user_profile
+                user_uuid=self.request.data.get('user_id')).user_profile
         except Exception:
             profile = None
             raise serializers.ValidationError(
@@ -46,19 +46,6 @@ class CreateSkillMixin(CreateModelMixin):
 
 
 class CreateEducationMixin(CreateModelMixin):
-
-    def perform_create(self, serializer):
-        try:
-            resume = self.request.user.user_profile.resume
-        except Exception:
-            resume = None
-            raise serializers.ValidationError(
-                {"message": "Resume for user does not exists"})
-        if resume:
-            serializer.save(resume=resume)
-
-
-class CreateAchievementMixin(CreateModelMixin):
 
     def perform_create(self, serializer):
         try:
