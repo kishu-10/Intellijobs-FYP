@@ -10,11 +10,13 @@ from jobs.serializers import *
 from rest_framework import status
 from django.views.generic import CreateView, ListView, UpdateView, View, DetailView
 from django.contrib import messages
-
+from django.db.models import Q
 
 # Create your views here.
 
 # Dashboard side
+
+
 class DashboardJobCategoryCreateView(DashboardUserMixin, CreateView):
     model = Category
     form_class = CategoryForm
@@ -122,7 +124,8 @@ class DashboardCandidateJobApplicationListView(DashboardUserMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['applications'] = JobApplication.objects.filter(job=self.object).order_by('-date_created', '-id')
+        context['applications'] = JobApplication.objects.filter(
+            job=self.object).order_by('-date_created', '-id')
         return context
 
 
@@ -138,15 +141,21 @@ class JobListView(ListAPIView):
         return context
 
     def get_queryset(self):
+        queryset = super().get_queryset()
         category = self.request.query_params.get('category', None)
+        title = self.request.query_params.get('title', None)
+        address = self.request.query_params.get('address', None)
         if category:
-            queryset = Job.objects.filter(
-                is_active=True, category=category).order_by('-date_created')
-        else:
-            queryset = Job.objects.filter(
-                is_active=True).order_by('-date_created')
-
-        return queryset
+            queryset = queryset.filter(category=category)
+        if title and address:
+            queryset.filter(Q(title__iexact=title) | Q(job_address__iexact=address) | Q(
+                organization__city__iexact=address) | Q(organization__area__iexact=address))
+        elif title and not address:
+            queryset.filter(title__iexact=title)
+        elif address and not title:
+            queryset.filter(Q(job_address__iexact=address) | Q(
+                organization__city__iexact=address) | Q(organization__area__iexact=address))
+        return queryset[0:9]
 
 
 class CategoriesListView(APIView):
