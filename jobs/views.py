@@ -1,3 +1,4 @@
+from functools import partial
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -5,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from dashboard.mixins import DashboardUserMixin
+from feeds.serializers import User
 from jobs.forms import CategoryForm, JobForm
 from jobs.serializers import *
 from rest_framework import status
@@ -190,3 +192,14 @@ class CategoryCreateView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetJobWishListView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        """API to fetch all the Wishlist Jobs"""
+        user = User.objects.get(user_uuid=self.kwargs.get('uuid'))
+        wishlist = JobWishlist.objects.filter(owner=user.user_profile).first()
+        serializer = GetJobWishListSerializer(
+            wishlist, context={'request': request})
+        return Response(serializer.data)

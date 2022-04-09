@@ -189,3 +189,26 @@ class UpdateUserProfileView(APIView):
                 user.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetUserCvView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        user = User.objects.get(user_uuid=self.kwargs.get('uuid'))
+        if user.user_type == "Candidate":
+            cv = CandidateCV.objects.filter(
+                candidate=UserProfile.objects.get(user=user))
+            serializer = GetCandidateCvSerializer(
+                cv, many=True, context={'request': request})
+            return Response(serializer.data)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request, *args, **kwargs):
+        user = User.objects.get(user_uuid=self.kwargs.get('uuid'))
+        serializer = CandidateCvSerializer(data=request.data)
+        if user.user_type == "Candidate":
+            profile = UserProfile.objects.get(user=user)
+            if serializer.is_valid():
+                serializer.save(candidate=profile)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
