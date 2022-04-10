@@ -2,7 +2,7 @@ from rest_framework.mixins import CreateModelMixin, ListModelMixin
 from rest_framework import serializers, status
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
-from cvbuilder.models import Education
+from cvbuilder.models import Education, Experience, Skill
 
 from cvbuilder.serializers import EducationSerializer
 
@@ -26,28 +26,46 @@ class CreateResumeMixin(CreateModelMixin):
 
 class CreateExperienceMixin(CreateModelMixin):
 
-    def perform_create(self, serializer):
+    def create(self, request, *args, **kwargs):
         try:
             resume = self.request.user.user_profile.resume
         except Exception:
             resume = None
             raise serializers.ValidationError(
                 {"message": "Resume for user does not exists"})
-        if resume:
-            serializer.save(resume=resume)
+        data = request.data.get('experiences')
+        for i in data:
+            if i.get('id'):
+                education = Experience.objects.filter(pk=i.get('id'))
+                i.pop('id')
+                if not i.get('end_date'):
+                    i.pop('end_date')
+                education.update(**i)
+            else:
+                if not i.get('end_date'):
+                    i.pop('end_date')
+                Experience.objects.create(**i, resume=resume)
+        return Response(request.data, status=status.HTTP_201_CREATED)
 
 
 class CreateSkillMixin(CreateModelMixin):
 
-    def perform_create(self, serializer):
+    def create(self, request, *args, **kwargs):
         try:
             resume = self.request.user.user_profile.resume
         except Exception:
             resume = None
             raise serializers.ValidationError(
                 {"message": "Resume for user does not exists"})
-        if resume:
-            serializer.save(resume=resume)
+        data = request.data.get('skills')
+        for i in data:
+            if i.get('id'):
+                education = Skill.objects.filter(pk=i.get('id'))
+                i.pop('id')
+                education.update(**i)
+            else:
+                Skill.objects.create(**i, resume=resume)
+        return Response(request.data, status=status.HTTP_201_CREATED)
 
 
 class CreateEducationMixin(CreateModelMixin):
