@@ -34,5 +34,5 @@ class EducationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Education
-        fields = ["title", "university", "degree", "subject",
+        fields = ["id", "university", "degree", "subject",
                   "address", "start_date", "end_date", "description"]

@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-
+from rest_framework.views import APIView
 from .mixins import *
 from .models import *
 from .serializers import *
@@ -25,3 +25,10 @@ class SkillViewset(ModelViewSet, CreateSkillMixin):
 class EducationViewset(ModelViewSet, CreateEducationMixin):
     serializer_class = EducationSerializer
     queryset = Education.objects.all()
+
+
+class CreateEducationView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = EducationSerializer(data=request.data)
+        if serializer.is_valid():
+            Education.objects.update_or_create()
