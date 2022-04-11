@@ -90,6 +90,8 @@ class JobDetailSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
     job_address = serializers.SerializerMethodField()
     organization = serializers.SerializerMethodField()
+    org_description = serializers.SerializerMethodField()
+    is_wishlist = serializers.SerializerMethodField()
 
     class Meta:
         model = Job
@@ -98,6 +100,9 @@ class JobDetailSerializer(serializers.ModelSerializer):
     def get_organization(self, obj):
         return obj.organization.name
 
+    def get_org_description(self, obj):
+        return obj.organization.org_description
+
     def get_job_address(self, obj):
         if obj.job_address:
             return obj.job_address
@@ -105,6 +110,18 @@ class JobDetailSerializer(serializers.ModelSerializer):
             return obj.organization.area
         elif obj.organization.city:
             return obj.organization.city
+
+    def get_is_wishlist(self, obj):
+        request = self.context.get('request')
+        wishlist = JobWishlist.objects.filter(
+            owner=request.user.user_profile).first()
+        details = wishlist.wishlist_detail.filter(is_active=True)
+        job_wishlist = list()
+        for i in details:
+            job_wishlist.append(i.job)
+        if obj in job_wishlist:
+            return True
+        return False
 
 
 class GetJobWishListSerializer(serializers.ModelSerializer):
@@ -123,3 +140,9 @@ class GetJobWishListSerializer(serializers.ModelSerializer):
         serializer = JobSerializer(
             job_list, many=True, context={'request': request})
         return serializer.data
+
+
+class JobWishListDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobWishlistDetail
+        fields = ["job"]

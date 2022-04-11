@@ -203,3 +203,32 @@ class GetJobWishListView(APIView):
         serializer = GetJobWishListSerializer(
             wishlist, context={'request': request})
         return Response(serializer.data)
+
+
+class CreateJobWishListView(APIView):
+
+    def post(self, request):
+        serializer = JobWishListDetailSerializer(data=request.data)
+        custom_data = {}
+        if serializer.is_valid():
+            try:
+                wishlist = JobWishlist.objects.get(
+                    owner=self.request.user.user_profile)
+            except Exception:
+                wishlist = JobWishlist.objects.create(
+                    owner=self.request.user.user_profile)
+            if JobWishlistDetail.objects.filter(wishlist=wishlist, job=serializer.validated_data.get('job')).exists():
+                wishlist_detail = JobWishlistDetail.objects.get(
+                    wishlist=wishlist, job=serializer.validated_data.get('job'))
+                wishlist_detail.is_active = not wishlist_detail.is_active
+                wishlist_detail.save()
+                if wishlist_detail.is_active:
+                    custom_data['message'] = "Job added to wishlist"
+                else:
+                    custom_data['message'] = "Job removed from wishlist"
+            else:
+                serializer.save(wishlist=wishlist)
+                custom_data['message'] = "Job added to wishlist"
+            custom_data.update(serializer.data)
+            return Response(custom_data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors)
