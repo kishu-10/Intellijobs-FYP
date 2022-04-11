@@ -15,7 +15,7 @@ class Post(DateTimeEntity):
         User, related_name='post', on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.caption
+        return self.caption + " - " + self.author.username
 
 
 class Follower(DateTimeEntity):

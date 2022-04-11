@@ -5,7 +5,7 @@ from .mixins import *
 
 
 # Create your views here.
-class PostViewSet(ModelViewSet, PostDeleteMixin):
+class PostViewSet(ModelViewSet, HomeFeedPostsListMixin, PostDeleteMixin):
     """ View sets for Posts """
 
     serializer_class = PostSerializer
