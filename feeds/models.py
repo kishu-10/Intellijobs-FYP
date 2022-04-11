@@ -23,6 +23,7 @@ class Follower(DateTimeEntity):
         User, on_delete=models.CASCADE, related_name='followers')
     being_followed = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='being_followeds')
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.follower.username, self.being_followed.username} follower-> followee'
