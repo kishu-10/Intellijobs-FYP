@@ -127,8 +127,34 @@ class DashboardCandidateJobApplicationListView(DashboardUserMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['applications'] = JobApplication.objects.filter(
-            job=self.object).order_by('-date_created', '-id')
+            job=self.object, status="Pending").order_by('-date_created', '-id')
         return context
+
+
+class DashboardApproveCandidateView(DashboardUserMixin, View):
+    def get(self, request, *args, **kwargs):
+        candidate = get_object_or_404(
+            UserProfile, pk=self.kwargs.get('candidate'))
+        job = get_object_or_404(Job, pk=self.kwargs.get('job'))
+        application = JobApplication.objects.get(job=job, candidate=candidate)
+        application.status = "Approved"
+        application.save()
+        messages.success(
+            request, f"{candidate.get_full_name()} approved successfully.")
+        return redirect(request.META.get('HTTP_REFERER'))
+
+
+class DashboardRejectCandidateView(DashboardUserMixin, View):
+    def get(self, request, *args, **kwargs):
+        candidate = get_object_or_404(
+            UserProfile, pk=self.kwargs.get('candidate'))
+        job = get_object_or_404(Job, pk=self.kwargs.get('job'))
+        application = JobApplication.objects.get(job=job, candidate=candidate)
+        application.status = "Rejected"
+        application.save()
+        messages.success(
+            request, f"{candidate.get_full_name()} rejected successfully.")
+        return redirect(request.META.get('HTTP_REFERER'))
 
 
 # API
@@ -248,3 +274,12 @@ class JobApplicationCreateView(APIView):
             serializer.save(candidate=profile)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetAppliedJobsView(APIView):
+    def get(self, request, *args, **kwargs):
+        applications = JobApplication.objects.filter(
+            candidate=self.request.user.user_profile)
+        serializer = GetJobApplicationSerializer(
+            applications, many=True, context={'request': request})
+        return Response(serializer.data)

@@ -10,6 +10,14 @@
   </div>
   <div class="card section-spacer">
     <div class="card-body">
+      {% for message in messages %}
+      <div class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert">
+          &times;
+        </button>
+        <strong>{{ message }}</strong>
+      </div>
+      {% endfor %}
       <div class="row mt-2">
         <div class="col-lg-12 pl-4 pr-4">
           <div class="form-row mt-lg-0 mt-3 card--white">
@@ -50,12 +58,13 @@
                    
                   </div>
                 </div>
+                <div class="section-footer">
+                  <a class="btn btn-success" href="{% url 'dashboard:approve_candidate' job=application.job.id candidate=application.candidate.id  %}">Approve</a>
+                  <a class="btn btn-danger" href="{% url 'dashboard:reject_candidate' job=application.job.id candidate=application.candidate.id %}">Reject</a>
+                </div>
               </div>
               {% endfor %}
             </div>
-          </div>
-          <div class="section-footer">
-            <a class="btn btn-outline-gray" href="{% url 'dashboard:jobs_list' %}">Back</a>
           </div>
         </div>
       </div>
