@@ -14,5 +14,6 @@ urlpatterns = [
          name='job-category-create'),
     path('wishlist/add/', CreateJobWishListView.as_view(), name='job-wishlist-add'),
     path('wishlist/<uuid>/', GetJobWishListView.as_view(), name='job-wishlist'),
+    path('apply/', JobApplicationCreateView.as_view(), name='job-apply'),
 
 ]

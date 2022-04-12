@@ -92,6 +92,7 @@ class JobDetailSerializer(serializers.ModelSerializer):
     organization = serializers.SerializerMethodField()
     org_description = serializers.SerializerMethodField()
     is_wishlist = serializers.SerializerMethodField()
+    has_applied = serializers.SerializerMethodField()
 
     class Meta:
         model = Job
@@ -123,6 +124,12 @@ class JobDetailSerializer(serializers.ModelSerializer):
             return True
         return False
 
+    def get_has_applied(self, obj):
+        request = self.context.get('request')
+        if JobApplication.objects.filter(candidate=request.user.user_profile, job=obj).exists():
+            return True
+        return False
+
 
 class GetJobWishListSerializer(serializers.ModelSerializer):
     jobs = serializers.SerializerMethodField()
@@ -146,3 +153,18 @@ class JobWishListDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobWishlistDetail
         fields = ["job"]
+
+
+class JobApplicationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobApplication
+        fields = ["cv", "job"]
+        extra_kwargs = {'job': {'required': True},
+                        'cv': {'required': True}}
+
+    def validate(self, attrs):
+        request = self.context.get('request')
+        if JobApplication.objects.filter(job=attrs.get(
+                'job'), candidate=request.user.user_profile).exists():
+            raise serializers.ValidationError({"message": "Already applied"})
+        return super().validate(attrs)

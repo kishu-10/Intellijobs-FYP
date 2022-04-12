@@ -232,3 +232,19 @@ class CreateJobWishListView(APIView):
             custom_data.update(serializer.data)
             return Response(custom_data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors)
+
+
+class JobApplicationCreateView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = JobApplicationSerializer(
+            data=request.data, context={"request": request})
+        if serializer.is_valid():
+            try:
+                profile = self.request.user.user_profile
+            except Exception:
+                profile = None
+                raise serializers.ValidationError(
+                    {"message": "No user profile"})
+            serializer.save(candidate=profile)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
