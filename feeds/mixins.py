@@ -1,8 +1,14 @@
-from rest_framework.mixins import ListModelMixin, DestroyModelMixin
+from rest_framework.mixins import ListModelMixin, DestroyModelMixin, CreateModelMixin
 from rest_framework.response import Response
 from feeds.models import Follower, Post
 from rest_framework import serializers, status
 from feeds.serializers import GetPostSerializer
+
+
+class CreatePostMixin(CreateModelMixin):
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 
 class HomeFeedPostsListMixin(ListModelMixin):
@@ -14,7 +20,8 @@ class HomeFeedPostsListMixin(ListModelMixin):
             being_followed.append(i.being_followed.id)
         posts = Post.objects.filter(
             author__id__in=being_followed).order_by('-date_created')
-        serializer = GetPostSerializer(posts, many=True, context={'request':self.request})
+        serializer = GetPostSerializer(posts, many=True, context={
+                                       'request': self.request})
         data = serializer.data
         return Response(data)
 
