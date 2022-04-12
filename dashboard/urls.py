@@ -1,10 +1,10 @@
 from django.urls import path
-from jobs.views import (DashboardCandidateJobApplicationListView, DashboardJobCategoryCreateView,
+from jobs.views import (DashboardApproveCandidateView, DashboardCandidateJobApplicationListView, DashboardJobCategoryCreateView,
                         DashboardJobCategoryDeleteView,
                         DashboardJobCategoryListView,
                         DashboardJobCategoryUpdateView, DashboardJobCreateView,
                         DashboardJobDeleteView, DashboardJobListView,
-                        DashboardJobUpdateView)
+                        DashboardJobUpdateView, DashboardRejectCandidateView)
 
 from dashboard.views import *
 from users.views import OrganizationProfileUpdateView
@@ -17,7 +17,8 @@ urlpatterns = [
     path('logout/', UserLogoutView.as_view(), name="logout"),
 
     # Organization Profile
-    path("org-profile/update/<int:pk>/", OrganizationProfileUpdateView.as_view(), name="update_org_profile"),
+    path("org-profile/update/<int:pk>/",
+         OrganizationProfileUpdateView.as_view(), name="update_org_profile"),
 
     # Verify Organization
     path("verify-organizations/", DashboardVerifyOrganizationList.as_view(),
@@ -56,4 +57,9 @@ urlpatterns = [
          DashboardJobCategoryUpdateView.as_view(), name="category_update"),
     path("jobs/job-category/<int:pk>-delete/",
          DashboardJobCategoryDeleteView.as_view(), name="category_delete"),
+
+    path("jobs/approve-candidate/<job>/<candidate>",
+         DashboardApproveCandidateView.as_view(), name="approve_candidate"),
+    path("jobs/reject-candidate/<job>/<candidate>",
+         DashboardRejectCandidateView.as_view(), name="reject_candidate")
 ]

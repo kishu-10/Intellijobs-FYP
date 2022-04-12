@@ -59,15 +59,22 @@ class Job(JobAbstractModel):
 
 
 class JobApplication(DateTimeEntity):
+    APPLICATION_STATUS = (
+        ('Pending', 'Pending'),
+        ('Rejected', 'Rejected'),
+        ('Approved', 'Approved'),
+    )
     candidate = models.ForeignKey(
         UserProfile, on_delete=models.CASCADE, related_name='applied_jobs')
     job = models.ForeignKey(Job, on_delete=models.CASCADE,
                             related_name='applications')
     cv = models.ForeignKey(
         CandidateCV, on_delete=models.CASCADE, related_name='applied_cv')
+    status = models.CharField(
+        max_length=50, choices=APPLICATION_STATUS, default="Pending")
 
     def __str__(self):
-        return self.candidate.get_full_name()
+        return f"{self.candidate.get_full_name()} - {self.job.title} - {self.status}"
 
 
 class JobWishlist(models.Model):

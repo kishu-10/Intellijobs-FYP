@@ -168,3 +168,14 @@ class JobApplicationSerializer(serializers.ModelSerializer):
                 'job'), candidate=request.user.user_profile).exists():
             raise serializers.ValidationError({"message": "Already applied"})
         return super().validate(attrs)
+
+
+class GetJobApplicationSerializer(serializers.ModelSerializer):
+    job = JobSerializer(read_only=True)
+    date_created = serializers.SerializerMethodField()
+    class Meta:
+        model = JobApplication
+        fields = "__all__"
+
+    def get_date_created(self, obj):
+        return obj.date_created.strftime("%b %d, %Y")
