@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Job Vacancy Announcement</title>
+</head>
+
+<body>
+  <table width="680" style="
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: .925rem;
+        color: rgb(51, 51, 51);
+      ">
+    <tr>
+      <td style="padding: 32px 48px 10px 48px">
+        <img src="{{logo}}" alt="IntelliJobs" style="width: 130px; height: 100px" />
+      </td>
+    </tr>
+
+    <tr>
+      <td style="padding: 0 48px">
+        <div style="line-height: 1.375rem">
+          <strong>Hi {{ email }},</strong>
+        </div>
+        <div style="line-height: 1.375rem">
+            {{organization.name}} has opened a new job vacancy.
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td style="padding: 0 48px 20px 48px">
+        <table style="
+              font-size: .925rem;
+              margin-top: 1.5rem;
+              padding: 1rem;
+              width: 100%;
+              background-color: rgb(246, 246, 246);
+            ">
+          <tr>
+            <td>
+              <div style="font-weight: 600; margin-bottom: 1rem">
+                Job Details:
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="width: 50%;">
+              <table>
+                <tr>
+                  <td>Job Title</td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; padding-bottom: 1rem">
+                    {{ job.title }}
+                  </td>
+                </tr>
+              </table>
+            </td>
+
+            <td>
+              <table>
+                <tr>
+                  <td>Apply Before</td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; padding-bottom: 1.5rem">
+                    {{ job.deadline|date:"M d, Y" }}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div style="width:100%; font-weight: 600; margin-bottom: 1rem; margin-top: .5rem;">
+                For further details of the job:
+                <br></br>
+                <a href="{% if request.is_secure %}https{% else %}http{% endif %}://{{domain}}{{job.id}}"
+                  style="color: #0d4bc3">Click Here</a>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr>
+      <td style="background-color: #0d4bc3; padding: 1rem 0">
+        <table style="
+              font-size: .925rem;
+              color: rgb(255, 255, 255);
+              width: 100%;
+              text-align: center;
+            ">
+          <tr>
+            <td style="padding-bottom: 0.5rem">
+              Copyright © 2022. All rights reserved
+            </td>
+          </tr>
+          <tr>
+            <td>IntelliJobs</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>

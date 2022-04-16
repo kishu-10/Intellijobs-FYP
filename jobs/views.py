@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from dashboard.mixins import DashboardUserMixin
+from feeds.models import Follower
 from feeds.serializers import User
 from jobs.forms import CategoryForm, JobForm
 from jobs.serializers import *
@@ -13,6 +14,8 @@ from rest_framework import status
 from django.views.generic import CreateView, ListView, UpdateView, View, DetailView
 from django.contrib import messages
 from django.db.models import Q
+from django.template.loader import render_to_string
+from intellijobs.tasks import send_email_verfication
 
 # Create your views here.
 
@@ -77,6 +80,31 @@ class DashboardJobCreateView(DashboardUserMixin, CreateView):
         instance.save()
         messages.success(
             self.request, f"{title} created successfully.")
+
+        # send vacancy announcement to followers
+        org_profile = self.request.user.org_profile
+        followers_email = list()
+        followers = Follower.objects.filter(
+            being_followed=self.request.user, is_active=True)
+        for i in followers:
+            followers_email.append(i.follower.email)
+        if org_profile.display_picture:
+            logo = self.request.build_absolute_uri(
+                org_profile.display_picture.url)
+        else:
+            logo = self.request.build_absolute_uri(
+                '/static/assets/images/logo.png')
+        subject = "New Job Vacancy Announcement - IntelliJobs"
+        for i in followers_email:
+            message = render_to_string('email-templates/job-open-email.html', {
+                'email': i,
+                'domain': "localhost:3000/job/",
+                'logo': logo,
+                'organization': org_profile,
+                'job': instance
+            })
+            send_email_verfication.delay(
+                subject, message, i)
         return HttpResponseRedirect(self.success_url)
 
 
