@@ -16,6 +16,7 @@ from .serializers import *
 from rest_framework.generics import ListAPIView
 from django.urls import reverse
 from django.contrib import messages
+from rest_framework.permissions import AllowAny
 
 User = get_user_model()
 account_activation_token = PasswordResetTokenGenerator()
@@ -44,6 +45,8 @@ class VerifyEmail(View):
 
 class CreateUserView(APIView):
     """ View to register new users in the system """
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = UserSerializer(

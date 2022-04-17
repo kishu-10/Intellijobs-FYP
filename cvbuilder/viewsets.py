@@ -7,22 +7,22 @@ from .serializers import *
 
 # Create your views here.
 
-class ResumeViewset(ModelViewSet, CreateResumeMixin):
+class ResumeViewset(ModelViewSet, ListResumeMixin, CreateResumeMixin):
     serializer_class = ResumeSerializer
     queryset = Resume.objects.all()
 
 
-class ExperienceViewset(ModelViewSet, CreateExperienceMixin):
+class ExperienceViewset(ModelViewSet, ListExperienceMixin, CreateExperienceMixin):
     serializer_class = ExperienceSerializer
     queryset = Experience.objects.all()
 
 
-class SkillViewset(ModelViewSet, CreateSkillMixin):
+class SkillViewset(ModelViewSet, ListSkillMixin, CreateSkillMixin):
     serializer_class = SkillSerializer
     queryset = Skill.objects.all()
 
 
-class EducationViewset(ModelViewSet, CreateEducationMixin):
+class EducationViewset(ModelViewSet, ListEducationMixin, CreateEducationMixin):
     serializer_class = EducationSerializer
     queryset = Education.objects.all()
 
