@@ -2,9 +2,9 @@ from rest_framework.mixins import CreateModelMixin, ListModelMixin
 from rest_framework import serializers, status
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
-from cvbuilder.models import Education, Experience, Skill
+from cvbuilder.models import Education, Experience, Resume, Skill
 
-from cvbuilder.serializers import EducationSerializer
+from cvbuilder.serializers import EducationSerializer, ExperienceSerializer, ResumeSerializer, SkillSerializer
 
 
 User = get_user_model()
@@ -91,11 +91,65 @@ class CreateEducationMixin(CreateModelMixin):
         return Response(request.data, status=status.HTTP_201_CREATED)
 
 
+class ListResumeMixin(ListModelMixin):
+
+    def list(self, request, *args, **kwargs):
+        super().list(request, *args, **kwargs)
+        try:
+            resume = self.request.user.user_profile
+        except Exception:
+            resume = None
+        resumes = None
+        if resume:
+            resumes = Resume.objects.filter(
+                profile=self.request.user.user_profile)
+        serializer = ResumeSerializer(resumes, many=True)
+        return Response(serializer.data)
+
+
 class ListEducationMixin(ListModelMixin):
 
     def list(self, request, *args, **kwargs):
         super().list(request, *args, **kwargs)
-        educations = Education.objects.filter(
-            resume=self.request.user.user_profile.resume)
+        try:
+            resume = self.request.user.user_profile.resume
+        except Exception:
+            resume = None
+        educations = None
+        if resume:
+            educations = Education.objects.filter(
+                resume=self.request.user.user_profile.resume)
         serializer = EducationSerializer(educations, many=True)
+        return Response(serializer.data)
+
+
+class ListExperienceMixin(ListModelMixin):
+
+    def list(self, request, *args, **kwargs):
+        super().list(request, *args, **kwargs)
+        try:
+            resume = self.request.user.user_profile.resume
+        except Exception:
+            resume = None
+        experiences = None
+        if resume:
+            experiences = Experience.objects.filter(
+                resume=self.request.user.user_profile.resume)
+        serializer = ExperienceSerializer(experiences, many=True)
+        return Response(serializer.data)
+
+
+class ListSkillMixin(ListModelMixin):
+
+    def list(self, request, *args, **kwargs):
+        super().list(request, *args, **kwargs)
+        try:
+            resume = self.request.user.user_profile.resume
+        except Exception:
+            resume = None
+        skills = None
+        if resume:
+            skills = Skill.objects.filter(
+                resume=self.request.user.user_profile.resume)
+        serializer = SkillSerializer(skills, many=True)
         return Response(serializer.data)
