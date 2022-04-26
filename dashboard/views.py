@@ -20,7 +20,7 @@ class DashboardIndexView(DashboardUserMixin, TemplateView):
 
 class DashboardVerifyOrganizationList(DashboardUserMixin, ListView):
     model = OrganizationProfile
-    queryset = OrganizationProfile.objects.all()
+    queryset = OrganizationProfile.objects.all().order_by('id')
     template_name = "verify-organization/verify-organization-list.html"
     context_object_name = "organizations"
 

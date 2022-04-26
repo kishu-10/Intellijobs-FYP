@@ -37,12 +37,12 @@ class CreateNetworkView(APIView):
                 follower.is_active = not follower.is_active
                 follower.save()
                 if follower.is_active:
-                    custom_data['message'] = "Followed"
+                    custom_data['message'] = f"Connected with {follower.being_followed.get_full_name()}"
                 else:
-                    custom_data['message'] = "Unfollowed"
+                    custom_data['message'] = f"Unconnected with {follower.being_followed.get_full_name()}"
             else:
                 serializer.save(follower=self.request.user)
-                custom_data['message'] = "Followed"
+                custom_data['message'] = f"Connected with {serializer.validated_data.get('being_followed').get_full_name()}"
             custom_data.update(serializer.data)
             return Response(custom_data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors)

@@ -116,12 +116,13 @@ class JobDetailSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         wishlist = JobWishlist.objects.filter(
             owner=request.user.user_profile).first()
-        details = wishlist.wishlist_detail.filter(is_active=True)
-        job_wishlist = list()
-        for i in details:
-            job_wishlist.append(i.job)
-        if obj in job_wishlist:
-            return True
+        if wishlist:
+            details = wishlist.wishlist_detail.filter(is_active=True)
+            job_wishlist = list()
+            for i in details:
+                job_wishlist.append(i.job)
+            if obj in job_wishlist:
+                return True
         return False
 
     def get_has_applied(self, obj):

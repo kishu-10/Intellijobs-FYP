@@ -1,14 +1,17 @@
-from functools import partial
+import collections
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
+from cvbuilder.models import Resume, Skill
 from dashboard.mixins import DashboardUserMixin
 from feeds.models import Follower
 from feeds.serializers import User
 from jobs.forms import CategoryForm, JobForm
+from jobs.recommendation import get_recommended_jobs, match_location
+# from jobs.recommendation import match_job
 from jobs.serializers import *
 from rest_framework import status
 from django.views.generic import CreateView, ListView, UpdateView, View, DetailView
@@ -198,20 +201,68 @@ class JobListView(ListAPIView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        category = self.request.query_params.get('category', None)
-        title = self.request.query_params.get('title', None)
-        address = self.request.query_params.get('address', None)
-        if category:
-            queryset = queryset.filter(category=category)
-        if title and address:
-            queryset.filter(Q(title__iexact=title) | Q(job_address__iexact=address) | Q(
-                organization__city__iexact=address) | Q(organization__area__iexact=address))
-        elif title and not address:
-            queryset.filter(title__iexact=title)
-        elif address and not title:
-            queryset.filter(Q(job_address__iexact=address) | Q(
-                organization__city__iexact=address) | Q(organization__area__iexact=address))
-        return queryset[0:9]
+        user = self.request.user
+        skills_list = []
+        location_job = []
+        recommended_jobs = []
+
+        """
+        sort list of jobs matching user's resume skills 
+        and job skills 
+        """
+        try:
+            resume = Resume.objects.get(profile=user.user_profile)
+        except Exception:
+            resume = None
+        if resume:
+            skills = Skill.objects.filter(resume=resume)
+
+            for i in skills:
+                skills_list.append(i.title)
+            job_list = []
+            for job in queryset:
+                match_value = get_recommended_jobs(
+                    [job.skills], [' '.join(skills_list)])
+                job_list.append(
+                    {"match_value": match_value.tolist()[0][0], "job": job})
+            ordered_jobs = sorted(
+                job_list, key=lambda d: d["match_value"], reverse=True)
+            for i in ordered_jobs:
+                recommended_jobs.append(i['job'])
+
+        """
+        sort list of jobs matching user profile location 
+        and organization profile location 
+        """
+        try:
+            profile = self.request.user.user_profile
+        except Exception:
+            profile = None
+            raise serializers.ValidationError(
+                {'message': 'User profile does not exist'})
+
+        job_location_list = []
+        if resume:
+            for job in recommended_jobs[:4]:
+                location_match_value = match_location([job.organization.get_address_detail], [
+                                                      profile.get_address_detail])
+                job_location_list.append(
+                    {"match_value": location_match_value.tolist()[0][0], "job": job})
+            ordered_jobs_location = sorted(
+                job_location_list, key=lambda d: d["match_value"], reverse=True)
+            for i in ordered_jobs_location:
+                location_job.append(i['job'])
+        else:
+            for job in queryset:
+                location_match_value = match_location([job.organization.get_address_detail], [
+                                                      profile.get_address_detail])
+                job_location_list.append(
+                    {"match_value": location_match_value.tolist()[0][0], "job": job})
+            ordered_jobs_location = sorted(
+                job_location_list, key=lambda d: d["match_value"], reverse=True)
+            for i in ordered_jobs_location:
+                location_job.append(i['job'])
+        return location_job
 
 
 class CategoriesListView(APIView):
