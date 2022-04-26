@@ -31,6 +31,13 @@ class AuthUser(AbstractUser):
     def __str__(self):
         return self.username
 
+    def get_full_name(self):
+        if self.user_type == "Candidate":
+            return self.user_profile.get_full_name()
+        elif self.user_type == "Organization":
+            return self.org_profile.get_full_name()
+        return "Staff"
+
     @property
     def has_dashboard_access(self):
         access = False
@@ -97,6 +104,9 @@ class UserProfile(AddressEntity):
         self.slug = slugify(self.get_full_name())
         return super().save(*args, **kwargs)
 
+    @property
+    def get_address_detail(self):
+        return f"{self.district} {self.area} {self.city} {self.description}"
 
 class OrganizationProfile(AddressEntity):
     """ Organization Profile for the organizations """
@@ -131,6 +141,13 @@ class OrganizationProfile(AddressEntity):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         return super().save(*args, **kwargs)
+
+    def get_full_name(self):
+        return self.name
+    
+    @property
+    def get_address_detail(self):
+        return f"{self.district} {self.area} {self.city} {self.description}"
 
 
 class CandidateCV(DateTimeEntity):

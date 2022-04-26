@@ -12,6 +12,12 @@ class CategoryForm(forms.ModelForm):
         model = Category
         fields = "__all__"
 
+    def clean_name(self):
+       name = self.cleaned_data.get('name')
+       if Category.objects.filter(name=name).exists():
+            raise forms.ValidationError("Job category with this name already exists.")
+       return name
+
 
 class JobForm(forms.ModelForm):
     use_required_attribute = False
