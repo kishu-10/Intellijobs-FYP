@@ -10,6 +10,7 @@ from dashboard.mixins import DashboardUserMixin
 from feeds.models import Follower
 from feeds.serializers import User
 from jobs.forms import CategoryForm, JobForm
+from jobs.pagination import JobPagination
 from jobs.recommendation import get_recommended_jobs, match_location
 # from jobs.recommendation import match_job
 from jobs.serializers import *
@@ -193,6 +194,7 @@ class JobListView(ListAPIView):
     serializer_class = JobSerializer
     queryset = Job.objects.filter(
         is_active=True).order_by('-date_created')
+    pagination_class = JobPagination
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -243,7 +245,7 @@ class JobListView(ListAPIView):
 
         job_location_list = []
         if resume:
-            for job in recommended_jobs[:4]:
+            for job in recommended_jobs:
                 location_match_value = match_location([job.organization.get_address_detail], [
                                                       profile.get_address_detail])
                 job_location_list.append(
@@ -263,6 +265,28 @@ class JobListView(ListAPIView):
             for i in ordered_jobs_location:
                 location_job.append(i['job'])
         return location_job
+
+
+class JobSearchFilterView(APIView):
+    pagination_class = JobPagination
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        title = data.get('title')
+        address = data.get('address')
+        category = data.get('category')
+        queryset = Job.objects.filter(
+            is_active=True).order_by('-date_created')
+        if category:
+            queryset = queryset.filter(category=category)
+        if title:
+            queryset = queryset.filter(title__icontains=title)
+        if address:
+            queryset = queryset.filter(Q(organization__province__name__icontains=address) | Q(organization__district__name__icontains=address) | Q(
+                organization__area__icontains=address) | Q(organization__city__icontains=address) | Q(organization__description__icontains=address))
+        serializer = JobSerializer(
+            queryset, many=True, context={'request': request})
+        return Response(serializer.data)
 
 
 class CategoriesListView(APIView):

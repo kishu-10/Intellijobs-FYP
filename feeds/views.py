@@ -6,6 +6,10 @@ from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import AllowAny
+
+from jobs.models import Job
+from users.models import OrganizationProfile, UserProfile
 
 User = get_user_model()
 
@@ -46,3 +50,16 @@ class CreateNetworkView(APIView):
             custom_data.update(serializer.data)
             return Response(custom_data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors)
+
+class GetLandingPageDetails(APIView):
+    """ View to register new users in the system """
+    authentication_classes = []
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        _dict = dict()
+        _dict['active_vacancies'] = Job.objects.filter(is_active=True).count()
+        _dict['organizations'] = OrganizationProfile.objects.all().count()
+        _dict['job_seekers'] = UserProfile.objects.all().count()
+        _dict['total_vacancies'] = Job.objects.all().count()
+        return Response(_dict, status=status.HTTP_200_OK)

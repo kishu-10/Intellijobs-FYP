@@ -7,7 +7,8 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, TemplateView, View, UpdateView
 from dashboard.mixins import DashboardUserMixin
 from intellijobs.tasks import send_email_verfication
-from users.models import OrganizationDocuments, OrganizationProfile
+from jobs.models import Job, JobApplication
+from users.models import OrganizationDocuments, OrganizationProfile, UserProfile
 from .forms import *
 
 User = get_user_model()
@@ -16,6 +17,14 @@ User = get_user_model()
 # Create your views here
 class DashboardIndexView(DashboardUserMixin, TemplateView):
     template_name = "index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['pending_vacancies'] = JobApplication.objects.filter(status="Pending").count()
+        context['organizations'] = OrganizationProfile.objects.all().count()
+        context['applied_candidates'] = JobApplication.objects.all().count()
+        context['total_vacancies'] = Job.objects.all().count()
+        return context
 
 
 class DashboardVerifyOrganizationList(DashboardUserMixin, ListView):

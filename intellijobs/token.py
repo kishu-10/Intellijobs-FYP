@@ -18,6 +18,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         if not self.user.has_profile:
             raise ValidationError(
                 {'message': 'Please complete the registration process for your profile.'})
+        if self.user.user_type == "Organization" and self.user.org_profile.verification_status!="Verified":
+            raise ValidationError(
+                {'message': "Your company's registration has not been verified."})
         try:
             data['refresh'] = str(refresh)
             data['access'] = str(refresh.access_token)
