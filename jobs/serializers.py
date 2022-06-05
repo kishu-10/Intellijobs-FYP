@@ -46,6 +46,7 @@ class JobSerializer(serializers.ModelSerializer):
     job_address = serializers.SerializerMethodField()
     organization = serializers.SerializerMethodField()
     organization_picture = serializers.SerializerMethodField()
+    applications = serializers.SerializerMethodField()
 
     class Meta:
         model = Job
@@ -60,7 +61,8 @@ class JobSerializer(serializers.ModelSerializer):
             'job_address',
             'job_level',
             'organization',
-            'organization_picture'
+            'organization_picture',
+            'applications'
         ]
 
     def get_date_created(self, obj):
@@ -83,6 +85,9 @@ class JobSerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(obj.organization.display_picture.url)
         else:
             return None
+
+    def get_applications(self, obj):
+        return JobApplication.objects.filter(job=obj).count()
 
 
 class JobDetailSerializer(serializers.ModelSerializer):
